@@ -76,6 +76,8 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             set +e
+            exec 2> smoke-stderr.txt
+            set -x
             adb install -r dist/PS5MobileSimulator-debug.apk > install.txt 2>&1
             echo "install=$?" > smoke-status.txt
             adb logcat -c
@@ -101,9 +103,14 @@ jobs:
               exit 1
             fi
             echo "crash=0" >> smoke-status.txt
-            if ! grep -q 'Success' install.txt; then echo "INSTALL FAILED"; exit 1; fi
-            if ! grep -q 'com.kaizer.ps5simulator' resumed.txt; then echo "ACTIVITY NOT RESUMED"; exit 1; fi
+            grep -q 'Success' install.txt
+            INSTALL_OK=$?
+            if [ "$INSTALL_OK" -ne 0 ]; then echo "INSTALL FAILED"; exit 1; fi
+            grep -q 'com.kaizer.ps5simulator' resumed.txt
+            RESUMED_OK=$?
+            if [ "$RESUMED_OK" -ne 0 ]; then echo "ACTIVITY NOT RESUMED"; exit 1; fi
             echo "SMOKE OK"
+            echo "SCRIPT_COMPLETED" >> smoke-status.txt
             exit 0
 
       - name: Upload logcat + screenshot
@@ -121,7 +128,7 @@ jobs:
         run: |
           set -e
           mkdir -p ci-results
-          for f in logcat.txt screenshot.png smoke-status.txt install.txt start.txt resumed.txt tap.txt; do
+          for f in logcat.txt screenshot.png smoke-status.txt install.txt start.txt resumed.txt tap.txt smoke-stderr.txt crash.txt; do
             [ -f "$f" ] && cp "$f" "ci-results/$f"
           done
           printf 'run_id=%s\nattempt=%s\njob_status=%s\nsmoke=%s\n' \
