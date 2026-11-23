@@ -85,8 +85,7 @@ jobs:
             adb shell input tap 500 300 > tap.txt 2>&1
             echo "tap=$?" >> smoke-status.txt
             sleep 4
-            (adb shell dumpsys activity activities | grep -iE 'mResumedActivity|topResumedActivity'; \
-             adb shell dumpsys window | grep -i mCurrentFocus) | head -8 > resumed.txt 2>&1
+            (adb shell dumpsys activity activities | grep -iE 'mResumedActivity|topResumedActivity'; adb shell dumpsys window | grep -i mCurrentFocus) | head -8 > resumed.txt 2>&1
             adb logcat -d -v threadtime > logcat.txt
             echo "logcat=$?" >> smoke-status.txt
             adb exec-out screencap -p > screenshot.png
