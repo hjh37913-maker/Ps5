@@ -3,3 +3,5 @@ am_start=0
 tap=0
 logcat=0
 screencap=0
+crash=0
+SCRIPT_COMPLETED

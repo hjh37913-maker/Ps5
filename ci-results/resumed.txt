@@ -1,2 +1,2 @@
-    mResumedActivity: ActivityRecord{c959545 u0 com.kaizer.ps5simulator/.MainActivity t6}
-  mCurrentFocus=Window{16f54b8 u0 com.kaizer.ps5simulator/com.kaizer.ps5simulator.MainActivity}
+    mResumedActivity: ActivityRecord{ea1d50 u0 com.kaizer.ps5simulator/.MainActivity t6}
+  mCurrentFocus=Window{bc7d02a u0 com.kaizer.ps5simulator/com.kaizer.ps5simulator.MainActivity}

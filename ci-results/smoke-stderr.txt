@@ -1,0 +1,24 @@
++ adb install -r dist/PS5MobileSimulator-debug.apk
++ INSTALL_RC=0
++ adb logcat -c
++ adb shell am start -n com.kaizer.ps5simulator/.MainActivity
++ AM_RC=0
++ sleep 15
++ adb shell input tap 500 300
++ TAP_RC=0
++ sleep 4
++ head -8
++ adb shell dumpsys activity activities
++ grep -iE 'mResumedActivity|topResumedActivity'
++ adb shell dumpsys window
++ grep -i mCurrentFocus
++ adb logcat -d -v threadtime
++ LOGCAT_RC=0
++ adb exec-out screencap -p
++ SCREEN_RC=0
++ echo install=0
++ echo am_start=0
++ echo tap=0
++ echo logcat=0
++ echo screencap=0
++ set +x
