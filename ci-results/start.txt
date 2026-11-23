@@ -1,0 +1,1 @@
+Starting: Intent { cmp=com.kaizer.ps5simulator/.MainActivity }
