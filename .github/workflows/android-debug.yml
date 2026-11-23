@@ -74,44 +74,7 @@ jobs:
           emulator-boot-timeout: 900
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            set +e
-            exec 2> smoke-stderr.txt
-            set -x
-            adb install -r dist/PS5MobileSimulator-debug.apk > install.txt 2>&1
-            echo "install=$?" > smoke-status.txt
-            adb logcat -c
-            adb shell am start -n com.kaizer.ps5simulator/.MainActivity > start.txt 2>&1
-            echo "am_start=$?" >> smoke-status.txt
-            sleep 15
-            adb shell input tap 500 300 > tap.txt 2>&1
-            echo "tap=$?" >> smoke-status.txt
-            sleep 4
-            (adb shell dumpsys activity activities | grep -iE 'mResumedActivity|topResumedActivity'; adb shell dumpsys window | grep -i mCurrentFocus) | head -8 > resumed.txt 2>&1
-            adb logcat -d -v threadtime > logcat.txt
-            echo "logcat=$?" >> smoke-status.txt
-            adb exec-out screencap -p > screenshot.png
-            echo "screencap=$?" >> smoke-status.txt
-            echo "=== install ==="; cat install.txt
-            echo "=== am start ==="; cat start.txt
-            echo "=== resumed ==="; cat resumed.txt
-            echo "=== status ==="; cat smoke-status.txt
-            echo "=== crash scan ==="
-            if grep -qE 'FATAL EXCEPTION|AndroidRuntime: FATAL' logcat.txt; then
-              echo "crash=1" >> smoke-status.txt
-              grep -E -A16 'FATAL EXCEPTION|AndroidRuntime: FATAL' logcat.txt | head -100
-              exit 1
-            fi
-            echo "crash=0" >> smoke-status.txt
-            grep -q 'Success' install.txt
-            INSTALL_OK=$?
-            if [ "$INSTALL_OK" -ne 0 ]; then echo "INSTALL FAILED"; exit 1; fi
-            grep -q 'com.kaizer.ps5simulator' resumed.txt
-            RESUMED_OK=$?
-            if [ "$RESUMED_OK" -ne 0 ]; then echo "ACTIVITY NOT RESUMED"; exit 1; fi
-            echo "SMOKE OK"
-            echo "SCRIPT_COMPLETED" >> smoke-status.txt
-            exit 0
+          script: bash android/tools/smoke.sh
 
       - name: Upload logcat + screenshot
         if: always()
@@ -128,6 +91,7 @@ jobs:
         run: |
           set -e
           mkdir -p ci-results
+          rm -f ci-results/*
           for f in logcat.txt screenshot.png smoke-status.txt install.txt start.txt resumed.txt tap.txt smoke-stderr.txt crash.txt; do
             [ -f "$f" ] && cp "$f" "ci-results/$f"
           done
@@ -136,7 +100,7 @@ jobs:
             > ci-results/result.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ci-results || true
+          git add -A ci-results || true
           if ! git diff --cached --quiet; then
             git commit -m "CI debug results (run $GITHUB_RUN_ID)" --quiet
             git pull --rebase origin "$GITHUB_REF_NAME"
