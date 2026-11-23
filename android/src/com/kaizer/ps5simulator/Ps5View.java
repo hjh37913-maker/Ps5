@@ -125,6 +125,9 @@ public final class Ps5View extends View {
     // ---------------------------------------------------------------- helpers
     private float dp(float v) { return v * density * uiScale; }
 
+    /** Converts a pixel measurement into dp units (for text sizes). */
+    private float S(float px) { return px / (density * uiScale); }
+
     private static float clamp(float v, float a, float b) {
         return v < a ? a : (v > b ? b : v);
     }
@@ -296,8 +299,9 @@ public final class Ps5View extends View {
         if (screen == S_LAUNCH) {
             drawLaunch(c, now);
         } else {
-            float barH = dp(56);
-            float navTop = h - dp(72);
+            float barH = Math.min(dp(56), h * 0.16f);
+            float navH = Math.min(dp(72), h * 0.20f);
+            float navTop = h - navH;
             drawTopBar(c, barH, now);
             switch (screen) {
                 case S_HOME: drawHome(c, barH, navTop); break;
@@ -312,7 +316,7 @@ public final class Ps5View extends View {
                 case S_MEDIA: drawMediaCenter(c, barH, navTop); break;
                 default: break;
             }
-            drawBottomNav(c, navTop);
+            drawBottomNav(c, navTop, navH);
         }
 
         if (dragMode != 1) cardScroll += (targetScroll - cardScroll) * 0.16f;
@@ -408,7 +412,7 @@ public final class Ps5View extends View {
         }
     }
 
-    private void drawBottomNav(Canvas c, float top) {
+    private void drawBottomNav(Canvas c, float top, float navH) {
         rect(c, 0, top, w, h, 0, 0xE0071020);
         rect(c, 0, top, w, top + dp(1), 0, 0x22FFFFFF);
         String[] names = {
@@ -419,11 +423,11 @@ public final class Ps5View extends View {
         int[] screens = { S_HOME, S_LIBRARY, S_STORE, S_GAMEBASE, S_PROFILE };
         for (int i = 0; i < 5; i++) {
             float cxi = w * (i + 0.5f) / 5f;
-            float cy = top + dp(30);
+            float cy = top + navH * 0.40f;
             boolean on = screen == screens[i] || (screen == S_DETAILS && i == 1) || (screen == S_MEDIA && i == 0);
-            if (on) rect(c, cxi - dp(52), top + dp(7), cxi + dp(52), h - dp(7), dp(12), alpha(ACCENT, 28));
+            if (on) rect(c, cxi - dp(52), top + navH * 0.10f, cxi + dp(52), h - navH * 0.10f, dp(12), alpha(ACCENT, 28));
             icon(c, i, cxi, cy - dp(4), dp(9), on ? ACCENT : FAINT);
-            text(c, names[i], cxi, top + dp(55), 9.5f, on ? WHITE : FAINT, on, 1);
+            text(c, names[i], cxi, top + navH * 0.78f, Math.min(9.5f, S(navH * 0.21f)), on ? WHITE : FAINT, on, 1);
             hit(cxi - dp(52), top, cxi + dp(52), h, A_NAV, i);
             if (on) rect(c, cxi - dp(20), top, cxi + dp(20), top + dp(2.5f), dp(1), ACCENT);
         }
@@ -441,62 +445,74 @@ public final class Ps5View extends View {
 
     private void drawHome(Canvas c, float barH, float navTop) {
         float left = dp(28), right = w - dp(28);
-        float top = barH + dp(12), bottom = navTop - dp(10);
-        float bannerW = (right - left) * 0.60f;
-        float bannerH = (bottom - top) * 0.55f;
+        float top = barH + dp(6), bottom = navTop - dp(6);
+        float ch = Math.max(dp(120), bottom - top);
+        float headerH = Math.max(dp(16), ch * 0.11f);
+        float cardH = Math.max(dp(52), ch * 0.38f);
+        float bannerH = Math.max(dp(60), ch - headerH - cardH - dp(8));
+        float cardW = cardH * 1.16f;
+        float gap = dp(10), stride = cardW + gap;
         GameCatalog.Game g = sel();
+        float bw = left + (right - left) * 0.60f;
 
-        bmp(c, GameCatalog.background(getContext(), g), left, top, left + bannerW, top + bannerH, dp(16));
-        rect(c, left, top, left + bannerW, top + bannerH, dp(16), 0x55060C1A);
-        grad(c, left, top + bannerH * 0.42f, left + bannerW, top + bannerH, dp(16), 0x00000000, 0xE0050A16);
-        outline(c, left, top, left + bannerW, top + bannerH, dp(16), alpha(g.primary, 90), 1.2f);
-        text(c, L("FEATURED", "ВЫБОР РЕДАКЦИИ", "ВИБІР РЕДАКЦІЇ"), left + dp(20), top + dp(26), 9, alpha(g.primary, 255), true, 0);
-        text(c, shorten(g.title, bannerW - dp(40), 22), left + dp(20), top + bannerH - dp(52), 22, WHITE, true, 0);
-        text(c, g.genre + "  •  " + g.publisher + "  •  " + g.year, left + dp(20), top + bannerH - dp(31), 10, DIM, false, 0);
-        float pw = dp(112), ph = dp(30);
-        float pl = left + bannerW - pw - dp(18), pt = top + bannerH - ph - dp(16);
+        bmp(c, GameCatalog.background(getContext(), g), left, top, bw, top + bannerH, dp(16));
+        rect(c, left, top, bw, top + bannerH, dp(16), 0x88060C1A);
+        grad(c, left, top + bannerH * 0.40f, bw, top + bannerH, dp(16), 0x00000000, 0xF0050A16);
+        outline(c, left, top, bw, top + bannerH, dp(16), alpha(g.primary, 90), 1.2f);
+        float featSize = clamp(S(bannerH * 0.17f), 13f, 22f);
+        float pw = Math.min(dp(108), (bw - left) * 0.36f);
+        float ph = Math.min(dp(30), bannerH * 0.28f);
+        float pl = bw - pw - dp(12), pt = top + bannerH - ph - dp(10);
+        text(c, L("FEATURED", "ВЫБОР РЕДАКЦИИ", "ВИБІР РЕДАКЦІЇ"), left + dp(16),
+                top + bannerH * 0.20f, clamp(S(bannerH * 0.11f), 7f, 9f), g.primary, true, 0);
+        text(c, shorten(g.title, bw - left - pw - dp(40), featSize), left + dp(16),
+                top + bannerH * 0.60f, featSize, WHITE, true, 0);
+        text(c, g.genre + "  •  " + g.publisher + "  •  " + g.year, left + dp(16),
+                top + bannerH * 0.80f, clamp(S(bannerH * 0.12f), 8f, 10f), DIM, false, 0);
         pill(c, pl, pt, pl + pw, pt + ph, g.primary, L("PLAY", "ИГРАТЬ", "ГРАТИ"), WHITE);
         hit(pl, pt, pl + pw, pt + ph, A_PLAY, selected);
-        hit(left, top, left + bannerW, top + bannerH - ph - dp(20), A_QUICK, 7);
+        hit(left, top, bw - pw - dp(20), top + bannerH - ph - dp(12), A_QUICK, 7);
 
-        float rx = left + bannerW + dp(14), rw = right - rx;
-        float rh = (bannerH - dp(12)) / 2f;
-        // continue playing card
+        float rx = bw + gap, rw = right - rx;
+        float rh = (bannerH - dp(8)) / 2f;
         rect(c, rx, top, rx + rw, top + rh, dp(14), PANEL);
         outline(c, rx, top, rx + rw, top + rh, dp(14), EDGE, 1);
-        text(c, L("Continue playing", "Продолжить игру", "Продовжити гру"), rx + dp(16), top + dp(26), 10, FAINT, true, 0);
+        text(c, L("Continue playing", "Продолжить игру", "Продовжити гру"), rx + dp(12),
+                top + rh * 0.28f, clamp(S(rh * 0.22f), 8f, 10f), FAINT, true, 0);
         String last = history.isEmpty() ? g.title : gameById(history.get(0)).title;
-        text(c, shorten(last, rw - dp(32), 15), rx + dp(16), top + dp(52), 15, WHITE, true, 0);
-        text(c, L("Tap to open", "Нажмите, чтобы открыть", "Торкніться, щоб відкрити"), rx + dp(16), top + rh - dp(14), 9, ACCENT, false, 0);
+        float lastSize = clamp(S(rh * 0.30f), 11f, 15f);
+        text(c, shorten(last, rw - dp(24), lastSize), rx + dp(12), top + rh * 0.62f, lastSize, WHITE, true, 0);
+        text(c, L("Tap to open", "Нажмите, чтобы открыть", "Торкніться, щоб відкрити"), rx + dp(12),
+                top + rh * 0.90f, clamp(S(rh * 0.18f), 7f, 9f), ACCENT, false, 0);
         hit(rx, top, rx + rw, top + rh, A_QUICK, 0);
-        // trophies card
-        float t2 = top + rh + dp(12);
+        float t2 = top + rh + dp(8);
         rect(c, rx, t2, rx + rw, top + bannerH, dp(14), PANEL);
         outline(c, rx, t2, rx + rw, top + bannerH, dp(14), EDGE, 1);
-        text(c, L("Trophies", "Трофеи", "Трофеї"), rx + dp(16), t2 + dp(26), 10, FAINT, true, 0);
-        text(c, trophies + " / 8", rx + dp(16), t2 + dp(54), 18, GOLD, true, 0);
-        float bw = rw - dp(32);
-        rect(c, rx + dp(16), t2 + rh - dp(28), rx + dp(16) + bw, t2 + rh - dp(22), dp(3), 0x33FFFFFF);
-        rect(c, rx + dp(16), t2 + rh - dp(28), rx + dp(16) + bw * (trophies / 8f), t2 + rh - dp(22), dp(3), GOLD);
+        text(c, L("Trophies", "Трофеи", "Трофеї"), rx + dp(12), t2 + rh * 0.28f,
+                clamp(S(rh * 0.22f), 8f, 10f), FAINT, true, 0);
+        text(c, trophies + " / 8", rx + dp(12), t2 + rh * 0.62f,
+                clamp(S(rh * 0.36f), 13f, 18f), GOLD, true, 0);
+        float barw = rw - dp(24);
+        rect(c, rx + dp(12), t2 + rh * 0.82f, rx + dp(12) + barw, t2 + rh * 0.88f, dp(3), 0x33FFFFFF);
+        rect(c, rx + dp(12), t2 + rh * 0.82f, rx + dp(12) + barw * (trophies / 8f), t2 + rh * 0.88f, dp(3), GOLD);
         hit(rx, t2, rx + rw, top + bannerH, A_QUICK, 1);
 
         String section = tab == 0
                 ? L("Your games", "Ваши игры", "Ваші ігри") + "  •  " + games.size()
                 : L("Media & apps", "Медиа и приложения", "Медіа та застосунки");
-        float rowTop = top + bannerH + dp(14);
-        text(c, section, left, rowTop + dp(12), 12, WHITE, true, 0);
+        float rowTop = top + bannerH + dp(6);
+        float headSize = clamp(S(headerH * 0.60f), 9f, 12f);
+        text(c, section, left, rowTop + headerH * 0.72f, headSize, WHITE, true, 0);
         text(c, tab == 0 ? L("Select a game, then tap again to open", "Выберите игру и нажмите ещё раз", "Виберіть гру та натисніть ще раз")
                         : L("Demo tiles — no external services", "Демо-плитки — без внешних сервисов", "Демо-плитки — без зовнішніх сервісів"),
-                right, rowTop + dp(12), 9, FAINT, false, 2);
+                right, rowTop + headerH * 0.72f, clamp(S(headerH * 0.44f), 7f, 9f), FAINT, false, 2);
 
-        float cardW = dp(112), cardH = dp(96), gap = dp(12), stride = cardW + gap;
-        float cardTop = rowTop + dp(20);
-        cardRowTop = cardTop; cardRowBottom = cardTop + cardH + dp(22);
-        maxCardScroll = Math.max(0, games.size() * stride - gap - (right - left));
+        float cardTop = rowTop + headerH;
+        cardRowTop = cardTop; cardRowBottom = cardTop + cardH + dp(18);
+        maxCardScroll = Math.max(0, (tab == 0 ? games.size() : 6) * stride - gap - (right - left));
         targetScroll = clamp(targetScroll, 0, maxCardScroll);
-
         c.save();
-        c.clipRect(left, cardTop - dp(6), right, cardRowBottom + dp(4));
+        c.clipRect(left, cardTop - dp(6), right, cardTop + cardH + dp(24));
         if (tab == 0) {
             for (int i = 0; i < games.size(); i++) {
                 float x = left + i * stride - cardScroll;
@@ -506,14 +522,15 @@ public final class Ps5View extends View {
                 float l = x - grow, t = cardTop - grow, r = x + cardW + grow, bt = cardTop + cardH + grow;
                 if (i == selected) glow(c, (l + r) / 2f, (t + bt) / 2f, cardW, alpha(gm.primary, 70));
                 bmp(c, GameCatalog.cover(getContext(), gm), l, t, r, bt, dp(10));
-                grad(c, l, t + cardH * 0.55f, r, bt, dp(10), 0x00000000, 0xBB050A16);
-                text(c, shorten(gm.title, cardW - dp(16), 9), l + dp(8), bt - dp(9), 9, WHITE, true, 0);
+                grad(c, l, t + cardH * 0.55f, r, bt, dp(10), 0x00000000, 0xCC050A16);
+                text(c, shorten(gm.title, cardW - dp(16), clamp(S(cardH * 0.12f), 8f, 9f)),
+                        l + dp(8), bt - dp(9), clamp(S(cardH * 0.12f), 8f, 9f), WHITE, true, 0);
                 if (favorites.contains(gm.id)) {
                     fill.setShader(null); fill.setStyle(Paint.Style.FILL); fill.setColor(GOLD);
                     c.drawCircle(r - dp(11), t + dp(11), dp(4), fill);
                 }
                 if (i == selected) outline(c, l - dp(2), t - dp(2), r + dp(2), bt + dp(2), dp(12), gm.primary, 2);
-                hit(l, t, r, bt + dp(20), A_CARD, i);
+                hit(l, t, r, bt + dp(18), A_CARD, i);
             }
         } else {
             String[] names = { L("Video", "Видео", "Відео"), L("Music", "Музыка", "Музика"),
@@ -521,15 +538,15 @@ public final class Ps5View extends View {
                     L("Captures", "Снимки", "Знімки"), L("Media Center", "Медиацентр", "Медіацентр") };
             int[] cols = { 0xFF3D6FD8, 0xFFB23D8A, 0xFF2FA88E, 0xFFD8703D, 0xFF6A5BD0, 0xFF2C7FB8 };
             for (int i = 0; i < names.length; i++) {
-                float x = left + i * (cardW + gap) - cardScroll;
+                float x = left + i * stride - cardScroll;
                 if (x > right || x + cardW < left) continue;
                 grad(c, x, cardTop, x + cardW, cardTop + cardH, dp(12), alpha(cols[i], 220), 0xFF0D1830);
                 glow(c, x + cardW * 0.7f, cardTop + cardH * 0.25f, cardW * 0.6f, alpha(cols[i], 90));
-                text(c, names[i], x + dp(10), cardTop + cardH - dp(14), 10, WHITE, true, 0);
-                text(c, "PS5", x + dp(10), cardTop + dp(24), 12, 0xCCFFFFFF, true, 0);
+                text(c, names[i], x + dp(10), cardTop + cardH - dp(12),
+                        clamp(S(cardH * 0.12f), 8f, 10f), WHITE, true, 0);
+                text(c, "PS5", x + dp(10), cardTop + dp(22), 12, 0xCCFFFFFF, true, 0);
                 hit(x, cardTop, x + cardW, cardTop + cardH, A_MEDIA, i);
             }
-            maxCardScroll = Math.max(0, 6 * stride - gap - (right - left));
         }
         c.restore();
     }
@@ -565,9 +582,10 @@ public final class Ps5View extends View {
 
         int cols = 6;
         float gap = dp(12);
-        float cw = (right - left - gap * (cols - 1)) / cols;
-        float rowH = cw + dp(24) + gap;
         float gridTop = top + chipH + dp(14);
+        float cw = Math.min((right - left - gap * (cols - 1)) / cols,
+                Math.max(dp(48), (bottom - gridTop) * 0.52f));
+        float rowH = cw + dp(24) + gap;
         maxLibScroll = Math.max(0, (float) Math.ceil(filtered.size() / (float) cols) * rowH - (bottom - gridTop));
         libraryScroll = clamp(libraryScroll, 0, maxLibScroll);
         c.save();
@@ -789,27 +807,29 @@ public final class Ps5View extends View {
         }
         rect(c, left, top, right, bottom, dp(18), 0xDD091228);
         outline(c, left, top, right, bottom, dp(18), alpha(g.primary, 90), 1.2f);
-        float cs = Math.min(dp(190), (bottom - top) * 0.72f);
+        float unit = Math.max(dp(140), bottom - top);
+        float cs = Math.min(dp(190), unit * 0.60f);
         bmp(c, GameCatalog.cover(getContext(), g), left + dp(20), top + dp(20), left + dp(20) + cs, top + dp(20) + cs, dp(14));
-        text(c, shorten(g.title, right - left - cs - dp(60), 24), left + cs + dp(44), top + dp(52), 24, WHITE, true, 0);
+        float infoX = left + cs + dp(40);
+        text(c, shorten(g.title, right - infoX - dp(20), 24), infoX, top + unit * 0.20f, 24, WHITE, true, 0);
         text(c, g.genre + "  •  " + g.publisher + "  •  " + g.year + "  •  "
                         + String.format(Locale.US, "%.1f GB", g.size / 1024f),
-                left + cs + dp(44), top + dp(76), 10, DIM, false, 0);
-        wrapped(c, g.description, left + cs + dp(44), top + dp(104),
-                Math.max(dp(120), right - left - cs - dp(70)), 11, DIM, 16);
+                infoX, top + unit * 0.32f, 10, DIM, false, 0);
+        wrapped(c, g.description, infoX, top + unit * 0.43f,
+                Math.max(dp(120), right - infoX - dp(24)), 11, DIM, 16);
         boolean fav = favorites.contains(g.id);
-        float bw = dp(132), bh = dp(36), by = top + dp(164);
-        pill(c, left + cs + dp(44), by, left + cs + dp(44) + bw, by + bh, g.primary,
+        float bw = Math.min(dp(132), (right - infoX - dp(12)) / 2f), bh = Math.min(dp(36), unit * 0.20f), by = top + unit * 0.68f;
+        pill(c, infoX, by, infoX + bw, by + bh, g.primary,
                 L("PLAY", "ИГРАТЬ", "ГРАТИ"), WHITE);
-        hit(left + cs + dp(44), by, left + cs + dp(44) + bw, by + bh, A_PLAY, current);
-        float fx = left + cs + dp(44) + bw + dp(12);
+        hit(infoX, by, infoX + bw, by + bh, A_PLAY, current);
+        float fx = infoX + bw + dp(12);
         pill(c, fx, by, fx + bw, by + bh, fav ? GOLD : 0xFF24406E,
                 fav ? L("★ Favorite", "★ В избранном", "★ В обраному") : L("☆ Add favorite", "☆ В избранное", "☆ В обране"), WHITE);
         hit(fx, by, fx + bw, by + bh, A_FAV, current);
         float by2 = by + bh + dp(12);
-        pill(c, left + cs + dp(44), by2, left + cs + dp(44) + bw, by2 + bh, 0xFF24406E,
+        pill(c, infoX, by2, infoX + bw, by2 + bh, 0xFF24406E,
                 L("Back", "Назад", "Назад"), WHITE);
-        hit(left + cs + dp(44), by2, left + cs + dp(44) + bw, by2 + bh, A_BACK, 0);
+        hit(infoX, by2, infoX + bw, by2 + bh, A_BACK, 0);
 
         float sy = top + dp(20) + cs + dp(20);
         if (sy + dp(90) < bottom) {

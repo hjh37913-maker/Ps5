@@ -75,23 +75,37 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
-            set -e
-            adb install -r dist/PS5MobileSimulator-debug.apk
+            set +e
+            adb install -r dist/PS5MobileSimulator-debug.apk > install.txt 2>&1
+            echo "install=$?" > smoke-status.txt
             adb logcat -c
-            adb shell am start -n com.kaizer.ps5simulator/.MainActivity
+            adb shell am start -n com.kaizer.ps5simulator/.MainActivity > start.txt 2>&1
+            echo "am_start=$?" >> smoke-status.txt
             sleep 15
-            adb shell input tap 500 300 || true
+            adb shell input tap 500 300 > tap.txt 2>&1
+            echo "tap=$?" >> smoke-status.txt
             sleep 4
-            echo "=== resumed activity ==="
-            adb shell dumpsys activity activities | grep -iE 'mResumedActivity|topResumedActivity' | head -5 || true
+            (adb shell dumpsys activity activities | grep -iE 'mResumedActivity|topResumedActivity'; \
+             adb shell dumpsys window | grep -i mCurrentFocus) | head -8 > resumed.txt 2>&1
             adb logcat -d -v threadtime > logcat.txt
+            echo "logcat=$?" >> smoke-status.txt
             adb exec-out screencap -p > screenshot.png
+            echo "screencap=$?" >> smoke-status.txt
+            echo "=== install ==="; cat install.txt
+            echo "=== am start ==="; cat start.txt
+            echo "=== resumed ==="; cat resumed.txt
+            echo "=== status ==="; cat smoke-status.txt
             echo "=== crash scan ==="
             if grep -qE 'FATAL EXCEPTION|AndroidRuntime: FATAL' logcat.txt; then
+              echo "crash=1" >> smoke-status.txt
               grep -E -A16 'FATAL EXCEPTION|AndroidRuntime: FATAL' logcat.txt | head -100
               exit 1
             fi
-            echo "NO CRASH DETECTED"
+            echo "crash=0" >> smoke-status.txt
+            if ! grep -q 'Success' install.txt; then echo "INSTALL FAILED"; exit 1; fi
+            if ! grep -q 'com.kaizer.ps5simulator' resumed.txt; then echo "ACTIVITY NOT RESUMED"; exit 1; fi
+            echo "SMOKE OK"
+            exit 0
 
       - name: Upload logcat + screenshot
         if: always()
@@ -108,8 +122,9 @@ jobs:
         run: |
           set -e
           mkdir -p ci-results
-          [ -f logcat.txt ] && cp logcat.txt ci-results/logcat.txt
-          [ -f screenshot.png ] && cp screenshot.png ci-results/screenshot.png
+          for f in logcat.txt screenshot.png smoke-status.txt install.txt start.txt resumed.txt tap.txt; do
+            [ -f "$f" ] && cp "$f" "ci-results/$f"
+          done
           printf 'run_id=%s\nattempt=%s\njob_status=%s\nsmoke=%s\n' \
             "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT" "${{ job.status }}" "${{ steps.smoke.outcome }}" \
             > ci-results/result.txt
