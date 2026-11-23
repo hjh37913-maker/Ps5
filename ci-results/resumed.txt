@@ -1,0 +1,2 @@
+    mResumedActivity: ActivityRecord{a1edd1 u0 com.kaizer.ps5simulator/.MainActivity t6}
+  mCurrentFocus=Window{fc7bffd u0 com.kaizer.ps5simulator/com.kaizer.ps5simulator.MainActivity}
