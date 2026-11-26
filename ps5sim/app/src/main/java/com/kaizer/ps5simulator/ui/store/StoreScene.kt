@@ -77,7 +77,7 @@ class StoreScene(private val engine: Engine) : Scene {
                 val x = left + i * (tw + gap)
                 if (x + tw > m.safeRight) return@forEachIndexed
                 ui.rect(c, x, rowY, x + tw, rowY + tw, 0xFF0B0B0F.toInt(), m.px(10f))
-                val bmp = Art.get(g.coverArt, tw.toInt(), tw.toInt())
+                val bmp = Art.get(g.cardArt, tw.toInt(), tw.toInt())
                 if (bmp != null) ui.clip(c, x, rowY, x + tw, rowY + tw) {
                     Draw.cover(c, bmp, x, rowY, x + tw, rowY + tw)
                 } else {

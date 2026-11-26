@@ -15,8 +15,8 @@ object Ref {
     const val TOP_BAR_HEIGHT = 96f
 
     /** Left/right content gutters. */
-    const val GUTTER_LEFT = 76f
-    const val GUTTER_RIGHT = 76f
+    const val GUTTER_LEFT = 175f
+    const val GUTTER_RIGHT = 96f
 
     /** Section tabs (Games / Media). */
     const val TAB_TEXT_SIZE = 44f
@@ -25,18 +25,18 @@ object Ref {
     const val TAB_INACTIVE_ALPHA = 0.55f
 
     /** Switcher row (the horizontal tile strip under the tabs). */
-    const val SWITCHER_TOP = 112f
-    const val SWITCHER_SIZE = 148f          // square tile
-    const val SWITCHER_GAP = 18f
-    const val SWITCHER_RADIUS = 26f
-    const val SWITCHER_SELECTED_SCALE = 1.14f
-    const val SWITCHER_LABEL_SIZE = 30f
-    const val SWITCHER_LABEL_GAP = 18f
+    const val SWITCHER_TOP = 150f
+    const val SWITCHER_SIZE = 240f          // square tile
+    const val SWITCHER_GAP = 22f
+    const val SWITCHER_RADIUS = 30f
+    const val SWITCHER_SELECTED_SCALE = 1.12f
+    const val SWITCHER_LABEL_SIZE = 27f
+    const val SWITCHER_LABEL_GAP = 14f
 
     /** Spotlight (selected game artwork + logo + meta + CTA). */
     const val SPOTLIGHT_LOGO_BOTTOM = 312f   // logo bottom, measured up from viewport bottom
-    const val SPOTLIGHT_LOGO_MAX_W = 640f
-    const val SPOTLIGHT_LOGO_MAX_H = 256f
+    const val SPOTLIGHT_LOGO_MAX_W = 700f
+    const val SPOTLIGHT_LOGO_MAX_H = 400f
     const val SPOTLIGHT_META_SIZE = 28f
     const val SPOTLIGHT_META_GAP = 18f
     const val PLAY_BUTTON_W = 372f
@@ -48,11 +48,11 @@ object Ref {
 
     /** "Must see" carousel cards (5:3 media thumbs). */
     const val MUSTSEE_TITLE_SIZE = 28f
-    const val MUSTSEE_CARD_W = 266f
-    const val MUSTSEE_CARD_H = 167f
-    const val MUSTSEE_CARD_RADIUS = 14f
-    const val MUSTSEE_GAP = 22f
-    const val MUSTSEE_BOTTOM = 21f
+    const val MUSTSEE_CARD_W = 314f
+    const val MUSTSEE_CARD_H = 222f
+    const val MUSTSEE_CARD_RADIUS = 8f
+    const val MUSTSEE_GAP = 24f
+    const val MUSTSEE_BOTTOM = 49f
 
     /** Control Center dock. */
     const val CC_DOCK_HEIGHT = 84f

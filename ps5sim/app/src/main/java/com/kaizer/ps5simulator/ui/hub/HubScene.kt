@@ -218,10 +218,10 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
         val gap = m.px(Ref.HUB_INFO_GAP)
         val y = m.heightPx - m.px(Ref.HUB_INFO_BOTTOM) - ch
         val stats = listOf(
-            Triple("Time to beat", Glyph.Clock, listOf("20%" to "Story", "33" to "h · Extras")),
-            Triple("Your time", Glyph.Activity, listOf("21%" to "h", "${engine.sim.playMinutes(g.id) / 60}" to "h total")),
-            Triple("Reviews", Glyph.Star, listOf("95%" to "positive", "Metacritic" to "sim")),
-            Triple("Achievements", Glyph.Trophy, listOf("20" to "of 37", "${g.sizeGb.toInt()}" to "GB")),
+            Triple("Time to beat", Glyph.Clock, listOf("20" to "h · Story", "33" to "h · Extras")),
+            Triple("Your time", Glyph.Activity, listOf("${engine.sim.playMinutes(g.id) / 60}" to "h · played", "${engine.sim.launchCount(g.id)}" to "sessions")),
+            Triple("Reviews", Glyph.Star, listOf("95" to "% positive", "12k" to "ratings")),
+            Triple("Achievements", Glyph.Trophy, listOf("20" to "of 37", "${g.sizeGb.toInt()}" to "GB install")),
         )
         ui.withAlpha(Ease.soft(a)) {
             stats.forEachIndexed { i, (title, glyph, lines) ->

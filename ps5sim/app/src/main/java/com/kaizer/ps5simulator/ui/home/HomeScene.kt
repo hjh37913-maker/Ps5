@@ -273,7 +273,8 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         val ui = f.ui
         ui.rect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF04050A.toInt())
         if (g == null) return
-        val artTop = m.px(198f)
+        // Full-bleed key art: the console never letterboxes the artwork band.
+        val artTop = 0f
         val artBottom = m.heightPx - m.px(Ref.MUSTSEE_CARD_H) - m.px(64f)
         val bmp = Art.get(g.artwork, (m.widthPx).toInt(), (artBottom - artTop).toInt().coerceAtLeast(64))
         if (bmp != null) {
@@ -331,12 +332,9 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
 
             // The 2020 launch interface has no launch button on Home: tapping the
             // artwork or the selected tile opens the Game Hub, where Play lives.
-            val hintY = metaY + m.px(40f)
-            ui.line(c, "Press  Play  on the tile to open the game hub", left, hintY,
-                m.textPx(20f), Ui.a(Tok.TextSecondary, 0.0f), Ui.Weight.Medium)
-            // invisible wide tap target over the artwork opens the hub
-            engine.hits.add(left, m.px(220f), m.widthPx * 0.72f,
-                m.heightPx - m.px(Ref.MUSTSEE_CARD_H + 80f), 9502) { engine.openHub(g.id) }
+            // (Invisible tap target over the artwork, so the frame stays reference-exact.)
+            engine.hits.add(left, m.px(430f), m.widthPx * 0.72f, mustSeeTop() - m.px(30f),
+                9502) { engine.openHub(g.id) }
         }
     }
 
