@@ -1,3 +1,2 @@
 install=0
-instrument=0
 crash=0
