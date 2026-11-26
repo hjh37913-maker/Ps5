@@ -117,11 +117,7 @@ class SwitcherStrip(
                 i++
             }
         }
-        // left fade so cropped tiles dissolve instead of cutting hard at the gutter
-        ui.scrim(c, left - m.px(8f), top - size * 0.4f, left + m.px(54f), top + size * 1.6f,
-            0xCC000000.toInt(), fromTop = false)
-        // horizontal fade
-        ui.rect(c, left - m.px(40f), top - size * 0.4f, left, top + size * 1.6f, 0xFF000000.toInt(), 0f)
+
     }
 
     private fun drawTile(

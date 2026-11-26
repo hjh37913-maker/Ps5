@@ -369,7 +369,7 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         val m = engine.metrics
         val ui = f.ui
         val c = f.canvas
-        val left = engine.gutter
+        val left = m.px(Ref.GUTTER_LEFT)
         val cardW = m.px(Ref.MUSTSEE_CARD_W)
         val cardH = m.px(Ref.MUSTSEE_CARD_H)
         val gap = m.px(Ref.MUSTSEE_GAP)
@@ -395,11 +395,8 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
                     }
                     ui.rectOutline(c, x, top, x + cardW, top + cardH, 0x1AFFFFFF.toInt(),
                         m.px(Ref.MUSTSEE_CARD_RADIUS), 1.5f)
-                    // title plate
-                    ui.scrim(c, x, top + cardH * 0.55f, x + cardW, top + cardH, 0xCC000000.toInt(),
-                        fromTop = false)
-                    ui.lineFit(c, g.title, x + m.px(14f), top + cardH - m.px(16f), cardW - m.px(28f),
-                        m.textPx(22f), 0xFFFFFFFF.toInt(), Ui.Weight.Medium)
+                    // No title plate: the store art carries its own logo, exactly as in the
+                    // reference carousel. The name is still exposed to accessibility + taps.
                     engine.hits.add(x, top, x + cardW, top + cardH, 9700 + i) {
                         engine.openHub(g.id)
                     }

@@ -77,7 +77,7 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
         ui.withAlpha(a) {
             // logo lockup
             val left = engine.gutter
-            val logoH = m.px(158f)
+            val logoH = m.px(210f)
             val logoW = m.px(Ref.HUB_LOGO_MAX_W)
             val ly = m.px(Ref.HUB_LOGO_Y) - logoH / 2f
             val hero = Art.get(g.heroArt, 640, 360)

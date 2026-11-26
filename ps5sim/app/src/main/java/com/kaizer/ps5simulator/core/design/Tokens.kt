@@ -23,26 +23,29 @@ object Ref {
     const val GUTTER_LEFT = 175f
     const val GUTTER_RIGHT = 96f
 
+    /** Tabs sit closer to the edge than the tile row (measured 94 vs 175 units). */
+    const val TAB_INSET_LEFT = 94f
+
     /** Section tabs (Games / Media). */
-    const val TAB_TEXT_SIZE = 44f
-    const val TAB_SPACING = 150f
+    const val TAB_TEXT_SIZE = 34f
+    const val TAB_SPACING = 201f
     const val TAB_ACTIVE_WEIGHT = 0.95f
     const val TAB_INACTIVE_ALPHA = 0.55f
 
     /** Switcher row (the horizontal tile strip under the tabs). */
-    const val SWITCHER_TOP = 150f
-    const val SWITCHER_SIZE = 240f          // square tile
+    const val SWITCHER_TOP = 127f
+    const val SWITCHER_SIZE = 152f          // square tile
     const val SWITCHER_GAP = 22f
     const val SWITCHER_RADIUS = 30f
-    const val SWITCHER_SELECTED_SCALE = 1.12f
-    const val SWITCHER_LABEL_SIZE = 27f
+    const val SWITCHER_SELECTED_SCALE = 1.16f
+    const val SWITCHER_LABEL_SIZE = 24f
     const val SWITCHER_LABEL_GAP = 14f
 
     /** Spotlight (selected game artwork + logo + meta + CTA). */
-    const val SPOTLIGHT_LOGO_BOTTOM = 312f   // logo bottom, measured up from viewport bottom
+    const val SPOTLIGHT_LOGO_BOTTOM = 315f   // logo bottom, measured up from viewport bottom
     const val SPOTLIGHT_LOGO_MAX_W = 700f
-    const val SPOTLIGHT_LOGO_MAX_H = 400f
-    const val SPOTLIGHT_META_SIZE = 28f
+    const val SPOTLIGHT_LOGO_MAX_H = 190f
+    const val SPOTLIGHT_META_SIZE = 25f
     const val SPOTLIGHT_META_GAP = 18f
     const val PLAY_BUTTON_W = 372f
     const val PLAY_BUTTON_H = 84f
@@ -52,12 +55,12 @@ object Ref {
     const val CTA_GAP = 18f
 
     /** "Must see" carousel cards (5:3 media thumbs). */
-    const val MUSTSEE_TITLE_SIZE = 28f
-    const val MUSTSEE_CARD_W = 314f
-    const val MUSTSEE_CARD_H = 222f
+    const val MUSTSEE_TITLE_SIZE = 21f
+    const val MUSTSEE_CARD_W = 250f
+    const val MUSTSEE_CARD_H = 140f
     const val MUSTSEE_CARD_RADIUS = 8f
-    const val MUSTSEE_GAP = 24f
-    const val MUSTSEE_BOTTOM = 49f
+    const val MUSTSEE_GAP = 21f
+    const val MUSTSEE_BOTTOM = 51f
 
     /** Control Center dock. */
     const val CC_DOCK_HEIGHT = 84f

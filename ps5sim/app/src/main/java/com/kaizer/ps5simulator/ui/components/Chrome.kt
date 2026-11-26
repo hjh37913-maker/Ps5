@@ -36,9 +36,9 @@ object Chrome {
         val m = f.engine.metrics
         val ui = f.ui
         val c = f.canvas
-        val left = f.engine.gutter
-        val top = m.px(46f)
-        val size = m.textPx(50f)
+        val left = m.px(Ref.TAB_INSET_LEFT)
+        val top = m.px(38f)
+        val size = m.textPx(Ref.TAB_TEXT_SIZE)
 
         // tab row baseline
         val baseline = top + size * 0.82f
@@ -61,21 +61,21 @@ object Chrome {
                 ui.rect(c, x, baseline + m.px(12f), x + w, baseline + m.px(14f),
                     Ui.a(Tok.TextPrimary, 0.0f), 0f)
             }
-            x += w + m.px(76f)
+            x += m.px(Ref.TAB_SPACING)
         }
 
         // right cluster: search, settings, avatar, clock
-        val glyph = m.px(34f)
-        var rx = m.safeRight - f.engine.gutter - rightInset
+        val glyph = m.px(32f)
+        var rx = m.safeRight - m.px(28f) - rightInset
         if (showClock) {
             val clock = f.engine.clockText()
-            val cs = m.textPx(32f)
+            val cs = m.textPx(26f)
             val cw = ui.measure(clock, cs, Ui.Weight.Medium)
             ui.line(c, clock, rx - cw, baseline, cs, Ui.a(Tok.TextPrimary, 0.92f), Ui.Weight.Medium)
-            rx -= cw + m.px(54f)
+            rx -= cw + m.px(46f)
         }
         // avatar
-        val avR = m.px(19f)
+        val avR = m.px(18f)
         val avCx = rx - avR
         avatar(c, ui, avCx, baseline - size * 0.30f, avR)
         rx = avCx - avR - m.px(36f)
@@ -91,7 +91,7 @@ object Chrome {
         f.engine.hits.add(rx - glyph, baseline - size * 0.8f, rx, baseline + m.px(6f), 9202) {
             f.engine.toast("Search is available in the Game Library")
         }
-        return m.px(112f)
+        return m.px(Ref.SWITCHER_TOP)
     }
 
     /**
