@@ -34,40 +34,40 @@ class MainActivity : Activity() {
     }
 
     /**
-     * Screenshot harness entry point. Used by the CI instrumentation runner and by the
-     * debug-only automation scripts; it never exists in release builds.
+     * Debug-only navigation hook used by the CI screenshot harness:
+     *
+     *   adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario hub
+     *
+     * Release builds ignore it. It never alters product behaviour.
      */
     private fun applyIntentScenario(v: SimulatorView) {
-        val debuggable = (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        val debuggable = (applicationInfo.flags and
+            android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
         if (!debuggable) return
-        val action = intent?.action ?: return
-        if (action != ACTION_SCENARIO) return
-        val scenario = intent.getStringExtra(EXTRA_SCENARIO) ?: "home"
+        val scenario = intent?.getStringExtra(EXTRA_SCENARIO) ?: return
+        val gameId = intent.getStringExtra(EXTRA_GAME)
         v.postDelayed({
+            val e = v.engine
+            if (gameId != null) e.sim.selectedGameId = gameId
             when (scenario) {
-                "library" -> v.engine.openLibrary()
-                "store" -> v.engine.openStore()
-                "store_detail" -> v.engine.openHub("gtavi")
-                "hub" -> v.engine.openHub("ghostyotei")
-                "control_center" -> v.engine.openControlCenter()
-                "profile" -> v.engine.openProfile()
-                "settings" -> v.engine.openSettings()
-                "launch" -> v.engine.openLaunch(v.engine.game("gtavi")!!)
-                "home_second" -> {
-                    v.engine.home?.let { h ->
-                        h.selectGameByIndex(2)
-                    }
-                }
-                "trophies" -> v.engine.openTrophies()
-                "media" -> v.engine.openMedia()
-                else -> Unit
+                "home" -> Unit
+                "home_second" -> e.home?.selectGameByIndex(2)
+                "hub" -> e.openHub(gameId ?: "ghostyotei")
+                "library" -> e.openLibrary()
+                "store" -> e.openStore()
+                "control_center" -> e.openControlCenter()
+                "profile" -> e.openProfile()
+                "settings" -> e.openSettings()
+                "trophies" -> e.openTrophies()
+                "media" -> e.openMedia()
+                "launch" -> e.game(gameId ?: "gtavi")?.let { e.openLaunch(it) }
             }
-        }, 450L)
+        }, 400L)
     }
 
     companion object {
-        const val ACTION_SCENARIO = "com.kaizer.ps5simulator.SCENARIO"
         const val EXTRA_SCENARIO = "scenario"
+        const val EXTRA_GAME = "game"
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

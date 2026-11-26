@@ -64,8 +64,6 @@ jobs:
             ps5sim/smoke-status.txt
             ps5sim/resumed.txt
             ps5sim/install.txt
-            ps5sim/instrument.txt
-            ps5sim/shots/instrumented/shots/*.png
           if-no-files-found: warn
       - name: Publish results
         if: always()

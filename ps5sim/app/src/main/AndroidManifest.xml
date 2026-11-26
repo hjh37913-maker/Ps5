@@ -27,9 +27,4 @@
             </intent-filter>
         </activity>
     </application>
-
-    <instrumentation
-        android:name=".ci.ShotRunner"
-        android:targetPackage="com.kaizer.ps5simulator"
-        android:label="PS5 screenshot harness" />
 </manifest>
