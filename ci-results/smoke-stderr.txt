@@ -10,8 +10,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/00_live_home.png
-+ sz=192665
-+ echo 'shot 00_live_home 192665B'
++ sz=192761
++ echo 'shot 00_live_home 192761B'
 + scenario home gtavi
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -21,8 +21,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home.png
-+ sz=192613
-+ echo 'shot home 192613B'
++ sz=192806
++ echo 'shot home 192806B'
 + scenario home_second spiderman2
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -32,8 +32,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home_second.png
-+ sz=194528
-+ echo 'shot home_second 194528B'
++ sz=194596
++ echo 'shot home_second 194596B'
 + scenario hub ghostyotei
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -43,8 +43,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/hub.png
-+ sz=115930
-+ echo 'shot hub 115930B'
++ sz=116414
++ echo 'shot hub 116414B'
 + scenario library gtavi
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -54,8 +54,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/library.png
-+ sz=213090
-+ echo 'shot library 213090B'
++ sz=212106
++ echo 'shot library 212106B'
 + scenario control_center ghostyotei
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -65,8 +65,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/control_center.png
-+ sz=135401
-+ echo 'shot control_center 135401B'
++ sz=135467
++ echo 'shot control_center 135467B'
 + scenario profile gtavi
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -76,8 +76,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/profile.png
-+ sz=63169
-+ echo 'shot profile 63169B'
++ sz=50648
++ echo 'shot profile 50648B'
 + scenario settings gtavi
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -87,8 +87,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/settings.png
-+ sz=28016
-+ echo 'shot settings 28016B'
++ sz=27270
++ echo 'shot settings 27270B'
 + scenario trophies gtavi
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -109,8 +109,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/store.png
-+ sz=145230
-+ echo 'shot store 145230B'
++ sz=145229
++ echo 'shot store 145229B'
 + scenario launch gtavi
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -120,8 +120,8 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/launch.png
-+ sz=118050
-+ echo 'shot launch 118050B'
++ sz=118076
++ echo 'shot launch 118076B'
 + scenario media gtavi
 + adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
@@ -131,8 +131,45 @@
 + adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/media.png
-+ sz=147576
-+ echo 'shot media 147576B'
++ sz=144799
++ echo 'shot media 144799B'
++ scenario gallery gtavi
++ adb shell am force-stop com.kaizer.ps5simulator
++ sleep 1
++ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario gallery --es game gtavi
++ sleep 5
++ shot gallery
++ adb exec-out screencap -p
++ local sz
+++ stat -c%s shots/gallery.png
++ sz=190159
++ echo 'shot gallery 190159B'
++ adb shell settings put system accelerometer_rotation 0
++ adb shell settings put system user_rotation 0
++ sleep 3
++ scenario portrait_home gtavi
++ adb shell am force-stop com.kaizer.ps5simulator
++ sleep 1
++ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario portrait_home --es game gtavi
++ sleep 5
++ shot portrait_home
++ adb exec-out screencap -p
++ local sz
+++ stat -c%s shots/portrait_home.png
++ sz=192622
++ echo 'shot portrait_home 192622B'
++ scenario portrait_library gtavi
++ adb shell am force-stop com.kaizer.ps5simulator
++ sleep 1
++ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario portrait_library --es game gtavi
++ sleep 5
++ shot portrait_library
++ adb exec-out screencap -p
++ local sz
+++ stat -c%s shots/portrait_library.png
++ sz=192652
++ echo 'shot portrait_library 192652B'
++ adb shell settings put system user_rotation 1
 + adb logcat -d -v threadtime
 + echo install=0
 + set +x
