@@ -16,6 +16,9 @@ T() { local secs=$1; shift; timeout --kill-after=5 "$secs" "$@"; }
 PKG=com.kaizer.ps5simulator
 ACT=$PKG/.MainActivity
 mkdir -p shots
+# The emulator's one-time "Viewing full screen" education dialog would cover every
+# capture. Mark it confirmed so immersive mode is silent, as on a real device.
+T 20 adb shell settings put secure immersive_mode_confirmations confirmed || true
 T 180 adb install -r dist/PS5InterfaceSimulator-debug.apk > install.txt 2>&1
 INSTALL_RC=$?
 T 20 adb logcat -c || true
