@@ -191,9 +191,15 @@ class Engine(private val context: Context) {
     }
 
     // ------------------------------------------------------------------ touch routing
+    private var edgeSwipe = false
+    private var edgeStartY = 0f
+
     fun onDown(x: Float, y: Float) {
         lastTouchX = x
         lastTouchY = y
+        // bottom-edge swipe up opens the Control Center (touch stand-in for the PS button)
+        edgeStartY = y
+        edgeSwipe = y > metrics.heightPx - metrics.px(56f)
         if (overlays.onDown(x, y)) return
         controlCenter?.let { cc ->
             if (cc.visible) {
@@ -201,7 +207,7 @@ class Engine(private val context: Context) {
                 return
             }
         }
-        hits.clear()
+        // hit regions persist from the last draw pass (immediate-mode contract)
         if (hits.down(x, y)) return
         current?.onDown(x, y)
     }
@@ -209,6 +215,13 @@ class Engine(private val context: Context) {
     fun onDrag(x: Float, y: Float, dx: Float, dy: Float) {
         lastTouchX = x
         lastTouchY = y
+        if (edgeSwipe) {
+            if (edgeStartY - y > metrics.px(54f)) {
+                edgeSwipe = false
+                controlCenter?.show()
+            }
+            return
+        }
         if (overlays.onDrag(x, y, dx, dy)) return
         controlCenter?.let { cc ->
             if (cc.visible) {
@@ -234,6 +247,7 @@ class Engine(private val context: Context) {
     }
 
     fun onCancel() {
+        edgeSwipe = false
         hits.cancel()
         overlays.onCancel()
     }

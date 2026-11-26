@@ -15,12 +15,12 @@ object Ref {
     const val TOP_BAR_HEIGHT = 96f
 
     /** Left/right content gutters. */
-    const val GUTTER_LEFT = 120f
-    const val GUTTER_RIGHT = 126f
+    const val GUTTER_LEFT = 76f
+    const val GUTTER_RIGHT = 76f
 
     /** Section tabs (Games / Media). */
     const val TAB_TEXT_SIZE = 44f
-    const val TAB_SPACING = 76f
+    const val TAB_SPACING = 150f
     const val TAB_ACTIVE_WEIGHT = 0.95f
     const val TAB_INACTIVE_ALPHA = 0.55f
 
@@ -34,9 +34,9 @@ object Ref {
     const val SWITCHER_LABEL_GAP = 18f
 
     /** Spotlight (selected game artwork + logo + meta + CTA). */
-    const val SPOTLIGHT_LOGO_BOTTOM = 812f   // logo baseline measured from viewport bottom
-    const val SPOTLIGHT_LOGO_MAX_W = 620f
-    const val SPOTLIGHT_LOGO_MAX_H = 290f
+    const val SPOTLIGHT_LOGO_BOTTOM = 312f   // logo bottom, measured up from viewport bottom
+    const val SPOTLIGHT_LOGO_MAX_W = 640f
+    const val SPOTLIGHT_LOGO_MAX_H = 256f
     const val SPOTLIGHT_META_SIZE = 28f
     const val SPOTLIGHT_META_GAP = 18f
     const val PLAY_BUTTON_W = 372f
@@ -48,11 +48,11 @@ object Ref {
 
     /** "Must see" carousel cards (5:3 media thumbs). */
     const val MUSTSEE_TITLE_SIZE = 28f
-    const val MUSTSEE_CARD_W = 300f
-    const val MUSTSEE_CARD_H = 168f
+    const val MUSTSEE_CARD_W = 266f
+    const val MUSTSEE_CARD_H = 167f
     const val MUSTSEE_CARD_RADIUS = 14f
-    const val MUSTSEE_GAP = 20f
-    const val MUSTSEE_BOTTOM = 46f
+    const val MUSTSEE_GAP = 22f
+    const val MUSTSEE_BOTTOM = 21f
 
     /** Control Center dock. */
     const val CC_DOCK_HEIGHT = 84f
@@ -74,15 +74,15 @@ object Ref {
     const val LIB_SECTION_GAP = 46f
 
     /** Game Hub. */
-    const val HUB_LOGO_Y = 392f
-    const val HUB_LOGO_MAX_W = 520f
+    const val HUB_LOGO_Y = 590f
+    const val HUB_LOGO_MAX_W = 470f
     const val HUB_META_SIZE = 26f
-    const val HUB_PLAY_W = 300f
-    const val HUB_PLAY_H = 74f
-    const val HUB_INFO_CARD_W = 400f
-    const val HUB_INFO_CARD_H = 150f
-    const val HUB_INFO_GAP = 22f
-    const val HUB_INFO_BOTTOM = 150f
+    const val HUB_PLAY_W = 340f
+    const val HUB_PLAY_H = 61f
+    const val HUB_INFO_CARD_W = 350f
+    const val HUB_INFO_CARD_H = 92f
+    const val HUB_INFO_GAP = 12f
+    const val HUB_INFO_BOTTOM = 181f
 }
 
 object Tok {

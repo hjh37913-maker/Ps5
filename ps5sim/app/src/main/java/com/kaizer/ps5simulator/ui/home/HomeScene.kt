@@ -153,7 +153,7 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
     // ------------------------------------------------------------------ layout helpers
     private fun mustSeeTop(): Float {
         val m = engine.metrics
-        return m.heightPx - m.px(Ref.MUSTSEE_CARD_H) - m.px(Ref.MUSTSEE_BOTTOM) - m.px(46f)
+        return m.heightPx - m.px(Ref.MUSTSEE_CARD_H) - m.px(Ref.MUSTSEE_BOTTOM)
     }
 
     private fun mustSeeContentWidth(): Float {
@@ -193,23 +193,11 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         ui.rect(c, 0f, 0f, m.widthPx, m.heightPx, 0x4D000000.toInt())
 
         // 2 — top bar --------------------------------------------------------------
-        val titles = listOf("Games", "Media")
-        val activeTab = if (tab == Tab.Games) 0 else 1
-        Chrome.topBar(f, activeTab, titles, onTab = { i ->
-            val next = if (i == 0) Tab.Games else Tab.Media
-            if (next != tab) {
-                tab = next
-                engine.sfx.play(Sfx.Cue.Select)
-                reload()
-                mustSeeScroll = 0f
-                mustSeeTarget = 0f
-            }
-        }, showClock = engine.settings.showClock)
         // gradient scrim behind the top bar (console art stays visible at the very top)
         ui.scrim(c, 0f, 0f, m.widthPx, m.px(300f), 0x99000000.toInt(), fromTop = true)
-        val textAlpha = 1f
-        // re-draw chrome above the scrim
-        Chrome.topBar(f, activeTab, titles, onTab = { i ->
+        val titles = listOf("Games", "Media")
+        val activeTab = if (tab == Tab.Games) 0 else 1
+        val onTab: (Int) -> Unit = { i ->
             val next = if (i == 0) Tab.Games else Tab.Media
             if (next != tab) {
                 tab = next
@@ -218,7 +206,15 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
                 mustSeeScroll = 0f
                 mustSeeTarget = 0f
             }
-        }, showClock = engine.settings.showClock)
+        }
+        Chrome.topBar(f, activeTab, titles, onTab = onTab, showClock = engine.settings.showClock)
+
+        if (engine.settings.showClock) {
+            val avatarX = m.safeRight - engine.gutter - m.px(238f)
+            engine.hits.add(avatarX - m.px(30f), m.px(10f), avatarX + m.px(30f), m.px(80f), 9250) {
+                engine.openProfile()
+            }
+        }
 
         // 3 — switcher strip ------------------------------------------------------
         val stripTop = m.px(Ref.SWITCHER_TOP)
@@ -302,24 +298,24 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
 
         ui.withAlpha(a) {
             val bmp = Art.get("file:///android_asset/games/${g.id}/hero.png", 960, 540)
-            val bottomAnchor = m.heightPx - m.px(Ref.SPOTLIGHT_LOGO_BOTTOM) - m.px(150f)
             val logoH = m.px(Ref.SPOTLIGHT_LOGO_MAX_H)
             val logoW = m.px(Ref.SPOTLIGHT_LOGO_MAX_W)
-            val ly = bottomAnchor - logoH
+            val logoBottom = m.heightPx - m.px(Ref.SPOTLIGHT_LOGO_BOTTOM)
+            val ly = logoBottom - logoH
             if (bmp != null) {
                 ui.clip(c, left - slide, ly, left + logoW - slide, ly + logoH) {
                     Draw.inside(c, bmp, left - slide, ly, left + logoW - slide, ly + logoH)
                 }
             }
-            // meta row
+            // meta row (measured ~25 units under the logo block)
             val metaSize = m.textPx(Ref.SPOTLIGHT_META_SIZE)
-            val metaY = bottomAnchor + m.px(44f)
+            val metaY = logoBottom + m.px(32f)
             val plays = engine.sim.launchCount(g.id)
             val meta = if (plays == 0) "New to console · ${g.genre}" else "Played ${plays * 2 + 1} h ago · ${g.genre}"
             ui.line(c, meta, left, metaY, metaSize, Ui.a(Tok.TextPrimary, 0.86f), Ui.Weight.Medium)
 
             // Play + more buttons
-            val btnY = metaY + m.px(20f)
+            val btnY = metaY + m.px(24f)
             val bw = m.px(Ref.PLAY_BUTTON_W)
             val bh = m.px(Ref.PLAY_BUTTON_H)
             ui.rect(c, left, btnY, left + bw, btnY + bh, 0x2EFFFFFF.toInt(), bh / 2f)
