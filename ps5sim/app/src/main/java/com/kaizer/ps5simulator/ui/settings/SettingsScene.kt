@@ -51,18 +51,20 @@ class SettingsScene(private val engine: Engine) : Scene {
             }
         }
         // translucent vertical grade so the sheet still reads as glass over the console
-        ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, 0xD90A0B0F.toInt(), 0xF207080B.toInt())
+        ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, 0xE60A0B0F.toInt(), 0xF207080B.toInt())
         Chrome.backRow(f, engine.s("settings"))
 
         ui.withAlpha(a) {
             val left = engine.gutter
-            val right = m.safeRight - engine.gutter
+            // Rows live in a readable column (≈1180 units wide); on wide screens the
+            // remainder stays empty rather than stretching controls to the far edge.
+            val right = minOf(m.safeRight - engine.gutter, left + m.px(1180f))
             ui.line(c, engine.s("settings"), left, m.px(120f), m.textPx(50f), 0xFFFFFFFF.toInt(),
                 Ui.Weight.Display)
             ui.line(c, engine.s("settings_sub"), left, m.px(156f), m.textPx(21f),
                 Ui.a(Tok.TextSecondary, 0.7f), Ui.Weight.Regular)
 
-            var y = m.px(196f) - scroll
+            var y = m.px(232f) - scroll
             val rowH = m.px(68f)
 
             fun section(title: String) {
@@ -187,7 +189,7 @@ class SettingsScene(private val engine: Engine) : Scene {
             y += m.px(40f)
 
             val content = y + scroll - m.px(210f)
-            val maxScroll = (content - (m.heightPx - m.px(210f) - m.px(20f))).coerceAtLeast(0f)
+            val maxScroll = (content - (m.heightPx - m.px(232f) - m.px(20f))).coerceAtLeast(0f)
             target = target.coerceIn(0f, maxScroll)
             scroll += (target - scroll) * (1f - kotlin.math.exp(-16f * f.dtMs / 1000f))
         }

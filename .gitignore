@@ -15,3 +15,6 @@ ps5sim/smoke-*.txt
 ps5sim/*.txt
 !ps5sim/README.md
 !ps5sim/LICENSES.md
+
+# signing material
+ps5sim/keystore.properties
