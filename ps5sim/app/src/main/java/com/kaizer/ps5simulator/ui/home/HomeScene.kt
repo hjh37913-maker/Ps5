@@ -243,13 +243,6 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         // 7 — must see carousel ----------------------------------------------------
         drawMustSee(f, fade)
 
-        // 8 — bottom hint ----------------------------------------------------------
-        if (engine.settings.showHints) {
-            val size = m.textPx(20f)
-            val cy = m.heightPx - m.px(18f)
-            ui.line(c, "Press PS button  ·  Control Center", m.widthPx / 2f, cy, size,
-                Ui.a(Tok.TextSecondary, 0.42f), Ui.Weight.Medium, align = Paint.Align.CENTER)
-        }
 
         // reveal curtain (home opens with a fade-through-black on console)
         if (reveal < 1f) {
@@ -272,7 +265,7 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         val ui = f.ui
         ui.rect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF04050A.toInt())
         if (g == null) return
-        val artTop = m.px(146f)
+        val artTop = m.px(198f)
         val artBottom = m.heightPx - m.px(Ref.MUSTSEE_CARD_H) - m.px(64f)
         val bmp = Art.get(g.artwork, (m.widthPx).toInt(), (artBottom - artTop).toInt().coerceAtLeast(64))
         if (bmp != null) {
@@ -328,33 +321,14 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
             val meta = if (plays == 0) "New to console · ${g.genre}" else "Played ${plays * 2 + 1} h ago · ${g.genre}"
             ui.line(c, meta, left, metaY, metaSize, Ui.a(Tok.TextPrimary, 0.86f), Ui.Weight.Medium)
 
-            // Play + more buttons
-            val btnY = metaY + m.px(24f)
-            val bw = m.px(Ref.PLAY_BUTTON_W)
-            val bh = m.px(Ref.PLAY_BUTTON_H)
-            ui.rect(c, left, btnY, left + bw, btnY + bh, 0x2EFFFFFF.toInt(), bh / 2f)
-            ui.rectOutline(c, left, btnY, left + bw, btnY + bh, 0x40FFFFFF.toInt(), bh / 2f, 2f)
-            val lblSize = m.textPx(Ref.PLAY_BUTTON_LABEL)
-            val tri = lblSize * 0.52f
-            val textW = ui.measure("Play", lblSize, Ui.Weight.Bold)
-            val groupW = tri * 2f + lblSize * 0.55f + textW
-            val gx = left + bw / 2f - groupW / 2f
-            val cy = btnY + bh / 2f
-            Icons.draw(c, Glyph.Play, gx + tri, cy, tri * 2f, 0xFFFFFFFF.toInt(), 0f)
-            ui.line(c, "Play", gx + tri * 2f + lblSize * 0.55f, cy + lblSize * 0.36f, lblSize,
-                0xFFFFFFFF.toInt(), Ui.Weight.Bold)
-            engine.hits.add(left, btnY, left + bw, btnY + bh, 9500) { engine.openHub(g.id) }
-
-            val mbx = left + bw + m.px(Ref.CTA_GAP)
-            val mbs = m.px(Ref.MORE_BUTTON_SIZE)
-            ui.circle(c, mbx + mbs / 2f, cy, mbs / 2f, 0x2EFFFFFF.toInt())
-            ui.rectOutline(c, mbx, cy - mbs / 2f, mbx + mbs, cy + mbs / 2f, 0x40FFFFFF.toInt(), mbs / 2f, 2f)
-            for (i in -1..1) {
-                ui.circle(c, mbx + mbs / 2f + i * mbs * 0.20f, cy, mbs * 0.055f, 0xFFFFFFFF.toInt())
-            }
-            engine.hits.add(mbx, cy - mbs / 2f, mbx + mbs, cy + mbs / 2f, 9501) {
-                engine.openHub(g.id)
-            }
+            // The 2020 launch interface has no launch button on Home: tapping the
+            // artwork or the selected tile opens the Game Hub, where Play lives.
+            val hintY = metaY + m.px(40f)
+            ui.line(c, "Press  Play  on the tile to open the game hub", left, hintY,
+                m.textPx(20f), Ui.a(Tok.TextSecondary, 0.0f), Ui.Weight.Medium)
+            // invisible wide tap target over the artwork opens the hub
+            engine.hits.add(left, m.px(220f), m.widthPx * 0.72f,
+                m.heightPx - m.px(Ref.MUSTSEE_CARD_H + 80f), 9502) { engine.openHub(g.id) }
         }
     }
 

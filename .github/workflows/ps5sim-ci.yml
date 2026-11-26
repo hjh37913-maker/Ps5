@@ -77,7 +77,7 @@ jobs:
           cp shots/instrumented/shots/*.png ../ci-results/shots/ 2>/dev/null || true
           cp shots/instrumented/shots/summary.txt ../ci-results/ 2>/dev/null || true
           cp shots/instrument.txt ../ci-results/ 2>/dev/null || true
-          cp smoke-status.txt logcat.txt ../ci-results/ 2>/dev/null || true
+          cp smoke-status.txt logcat.txt smoke-stderr.txt ../ci-results/ 2>/dev/null || true
           printf 'run_id=%s\njob_status=%s\nsmoke=%s\n' "$GITHUB_RUN_ID" "${{ job.status }}" "${{ steps.smoke.outcome }}" > ../ci-results/result.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

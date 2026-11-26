@@ -665,23 +665,12 @@ def make_game_assets(g):
     sd.rectangle([0, 0, 512 - 1, 512 - 1], outline=(255, 255, 255, 26), width=2)
     cov = Image.alpha_composite(cov.convert("RGBA"), strip).convert("RGB")
     cov.save(os.path.join(out, "cover.jpg"), quality=88, optimize=True, progressive=True)
-    # ---- card 480x480 (tighter art, short word only)
+    # ---- card 480x480: clean square key-art crop for the switcher strip.
+    #      No typography here — the console draws the tile label in the UI layer.
     card, _ = scene(g, 480, 480, 21)
     card = finish(card, 480, 480)
-    card = bottom_shade(card, 0.40, 170)
-    d = ImageDraw.Draw(card, "RGBA")
-    wd = g[11]
-    f = F(800, int(480 * 0.085))
-    while d.textlength(wd, font=f) > 480 * 0.86 and f.size > 10:
-        f = F(800, f.size - 2)
-    # letter-spaced word
-    sp = f.size * 0.10
-    tw = sum(d.textlength(c, font=f) + sp for c in wd) - sp
-    cx = (480 - tw) / 2
-    for ch in wd:
-        d.text((cx, 480 * 0.855), ch, font=f, fill=(255, 255, 255, 246))
-        cx += d.textlength(ch, font=f) + sp
-    card.save(os.path.join(out, "card.jpg"), quality=85, optimize=True, progressive=True)
+    card = bottom_shade(card, 0.22, 90)
+    card.save(os.path.join(out, "card.jpg"), quality=86, optimize=True, progressive=True)
     # ---- screenshots
     for k in range(3):
         sc, _ = scene(g, 800, 450, 40 + k * 7)

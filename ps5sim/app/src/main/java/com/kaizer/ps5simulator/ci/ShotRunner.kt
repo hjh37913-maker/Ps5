@@ -42,6 +42,12 @@ class ShotRunner : Instrumentation() {
     }
 
     override fun onStart() {
+        // onCreate/onStart run on the app's main thread; blocking there would prevent
+        // activities from launching, so the whole capture pass runs on a worker.
+        Thread({ runCapture() }, "shot-runner").start()
+    }
+
+    private fun runCapture() {
         val results = StringBuilder()
         val outDir = File(targetContext.getExternalFilesDir(null), "shots")
         outDir.mkdirs()
