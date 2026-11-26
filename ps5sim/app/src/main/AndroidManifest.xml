@@ -26,9 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <instrumentation
-            android:name=".ci.ShotRunner"
-            android:targetPackage="com.kaizer.ps5simulator"
-            android:label="PS5 screenshot harness" />
     </application>
+
+    <instrumentation
+        android:name=".ci.ShotRunner"
+        android:targetPackage="com.kaizer.ps5simulator"
+        android:label="PS5 screenshot harness" />
 </manifest>
