@@ -321,7 +321,20 @@ class Engine(private val context: Context) {
     }
 
     // ------------------------------------------------------------------ convenience
-    val gutter: Float get() = metrics.px(Ref.GUTTER_LEFT)
+    /**
+     * Left content gutter.
+     *
+     * Reference gutter is 175 units from the screen edge. On displays wider than the
+     * 1920 reference we keep the spotlight block at ~55% of the width (as measured on
+     * the stills) instead of pushing it further right, matching the console's behaviour
+     * of keeping the title block visually anchored.
+     */
+    val gutter: Float get() = run {
+        val u = metrics.u
+        val ref = Ref.GUTTER_LEFT * u
+        val extra = metrics.widthPx - 1920f * u
+        if (extra <= 0f) ref else ref + extra * 0.30f
+    }
 
     val hour: Int get() = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
     val minute: Int get() = java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE)

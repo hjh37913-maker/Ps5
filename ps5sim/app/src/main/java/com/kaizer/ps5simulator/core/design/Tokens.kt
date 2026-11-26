@@ -4,8 +4,13 @@ package com.kaizer.ps5simulator.core.design
  * Design tokens reconstructed from PS5 (2020 launch UI) reference captures.
  *
  * Geometry is stored in REFERENCE VIEWPORT UNITS: the 1920x1080 UI plane.
- * The renderer converts a token to device pixels through [Metrics.u], which
- * accounts for the device width, safe area and the user's UI scale.
+ *
+ * One unit = heightPx / 1080, NOT widthPx / 1920: the console scales its interface
+ * to the screen height and lets wide displays show MORE horizontal content (extra
+ * switcher tiles, extra must-see cards) instead of stretching everything. Using the
+ * width basis on a 20:9 phone collapses the vertical rhythm, which is exactly the
+ * defect this comment exists to prevent.
+ *
  * Values were measured on official interface stills normalised to 1920x1080.
  * Colours are sRGB ints (0xAARRGGBB) sampled from those stills.
  */
@@ -181,16 +186,24 @@ data class Metrics(
     val insetTopPx: Float = 0f,
     val insetBottomPx: Float = 0f,
 ) {
-    /** reference units -> device px */
-    val u: Float = (widthPx / 1920f) * userScale
+    /**
+     * reference units -> device px.
+     *
+     * Derived from HEIGHT (1080 units tall) so the vertical rhythm is identical on every
+     * display; a wider screen simply shows more columns of content, as the console does.
+     */
+    val u: Float = (heightPx / 1080f) * userScale
 
     fun px(units: Float): Float = units * u
 
     /** The usable design height in reference units, capped so 16:9 content never crops. */
     val viewportHeightUnits: Float get() = heightPx / u
 
-    /** Vertical placement: reference screens are 1080 units tall; scale rows when narrower. */
-    val contentScaleY: Float get() = (viewportHeightUnits / 1080f).coerceIn(0.72f, 1f)
+    /** Kept for call sites: with a height basis the vertical scale is always 1. */
+    val contentScaleY: Float get() = 1f
+
+    /** Usable width in reference units — wider than 1920 on tall phones. */
+    val viewportWidthUnits: Float get() = widthPx / u
 
     /** Reference text size -> device pixels (use with Ui.line / Ui.paragraph). */
     fun textPx(size: Float): Float = size * u
