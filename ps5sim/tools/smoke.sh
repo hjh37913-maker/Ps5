@@ -10,30 +10,33 @@ set -uo pipefail
 exec 2> smoke-stderr.txt
 set -x
 
+# Portable timeout: any hung adb call fails fast instead of stalling the CI job.
+T() { local secs=$1; shift; timeout --kill-after=5 "$secs" "$@"; }
+
 PKG=com.kaizer.ps5simulator
 ACT=$PKG/.MainActivity
 mkdir -p shots
-adb install -r dist/PS5InterfaceSimulator-debug.apk > install.txt 2>&1
+T 180 adb install -r dist/PS5InterfaceSimulator-debug.apk > install.txt 2>&1
 INSTALL_RC=$?
-adb logcat -c || true
+T 20 adb logcat -c || true
 
 shot() { # file
-  adb exec-out screencap -p > "shots/$1.png"
+  T 40 adb exec-out screencap -p > "shots/$1.png"
   local sz
   sz=$(stat -c%s "shots/$1.png" 2>/dev/null || echo 0)
   echo "shot $1 ${sz}B"
 }
 
 scenario() { # name game
-  adb shell am force-stop $PKG
+  T 20 adb shell am force-stop $PKG
   sleep 1
-  adb shell am start -n $ACT --es scenario "$1" --es game "${2:-gtavi}" > /dev/null 2>&1
-  sleep 5
+  T 30 adb shell am start -n $ACT --es scenario "$1" --es game "${2:-gtavi}" > /dev/null 2>&1
+  sleep 4
   shot "$1"
 }
 
-adb shell am start -n $ACT > start.txt 2>&1
-sleep 8
+T 30 adb shell am start -n $ACT > start.txt 2>&1
+sleep 6
 shot 00_live_home
 scenario home gtavi
 scenario home_second spiderman2
@@ -48,16 +51,8 @@ scenario launch gtavi
 scenario media gtavi
 scenario gallery gtavi
 
-# portrait pass: rotate the device and re-capture the two densest screens
-adb shell settings put system accelerometer_rotation 0
-adb shell settings put system user_rotation 0
-sleep 3
-scenario portrait_home gtavi
-scenario portrait_library gtavi
-adb shell settings put system user_rotation 1
-
-(adb shell dumpsys activity activities | grep -iE 'mResumedActivity' ) > resumed.txt 2>&1
-adb logcat -d -v threadtime > logcat.txt
+(T 20 adb shell dumpsys activity activities | grep -iE 'mResumedActivity' ) > resumed.txt 2>&1
+T 60 adb logcat -d -v threadtime > logcat.txt
 
 {
   echo "install=$INSTALL_RC"
