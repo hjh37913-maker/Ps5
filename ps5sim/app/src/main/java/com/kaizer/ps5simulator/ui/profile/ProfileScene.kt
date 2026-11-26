@@ -29,6 +29,8 @@ class ProfileScene(private val engine: Engine) : Scene {
     private var reveal = 0f
     private var tab = 0 // 0 overview, 1 friends, 2 activity
 
+    override fun isAnimating(): Boolean = reveal < 1f
+
     override fun onShow() { reveal = 0f }
 
     override fun draw(f: Frame) {

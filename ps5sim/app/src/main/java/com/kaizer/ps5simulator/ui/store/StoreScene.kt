@@ -22,6 +22,8 @@ class StoreScene(private val engine: Engine) : Scene {
 
     private var reveal = 0f
 
+    override fun isAnimating(): Boolean = reveal < 1f
+
     override fun onShow() { reveal = 0f }
 
     override fun draw(f: Frame) {

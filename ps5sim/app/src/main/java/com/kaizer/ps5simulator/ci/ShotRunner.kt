@@ -25,7 +25,7 @@ class ShotRunner : Instrumentation() {
     /** scenario name -> game id used for artwork-dependent screens */
     private val scenarios = listOf(
         "home" to "gtavi",
-        "home_alt" to "spiderman2",
+        "home_second" to "spiderman2",
         "hub" to "ghostyotei",
         "library" to "gtavi",
         "control_center" to "ghostyotei",
@@ -33,6 +33,7 @@ class ShotRunner : Instrumentation() {
         "settings" to "gtavi",
         "store" to "gtavi",
         "launch" to "gtavi",
+        "trophies" to "gtavi",
     )
 
     override fun onCreate(arguments: Bundle?) {
@@ -59,7 +60,8 @@ class ShotRunner : Instrumentation() {
                 SystemClock.sleep(2200L)
                 var view: SimulatorView? = null
                 runOnMainSync {
-                    view = activity?.findViewById<SimulatorView>(ANDROID_CONTENT_ID)
+                    val decor = activity?.window?.decorView ?: return@runOnMainSync
+                    view = decor.findViewWithTag(SimulatorView.TAG_SIMULATOR) as? SimulatorView
                 }
                 val target = view
                 if (target != null) {

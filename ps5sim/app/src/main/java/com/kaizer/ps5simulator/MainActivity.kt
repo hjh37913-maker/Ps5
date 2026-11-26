@@ -53,8 +53,13 @@ class MainActivity : Activity() {
                 "profile" -> v.engine.openProfile()
                 "settings" -> v.engine.openSettings()
                 "launch" -> v.engine.openLaunch(v.engine.game("gtavi")!!)
-                "home_second" -> v.engine.home?.let { }
-                "trophies" -> v.engine.showInfo("Trophies", "Screenshot scenario stub")
+                "home_second" -> {
+                    v.engine.home?.let { h ->
+                        h.selectGameByIndex(2)
+                    }
+                }
+                "trophies" -> v.engine.openTrophies()
+                "media" -> v.engine.openMedia()
                 else -> Unit
             }
         }, 450L)

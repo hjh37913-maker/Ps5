@@ -44,6 +44,8 @@ class MediaScene(private val engine: Engine) : Scene {
     private var dragStartY = 0f
     private var scrollStart = 0f
 
+    override fun isAnimating(): Boolean = reveal < 1f || dragging
+
     override fun onShow() { reveal = 0f }
 
     override fun draw(f: Frame) {

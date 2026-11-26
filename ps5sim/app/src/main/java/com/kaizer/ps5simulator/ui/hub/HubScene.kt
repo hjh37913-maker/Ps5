@@ -43,6 +43,8 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
     private var activityTarget = 0f
     private var focusedIndex = 0
 
+    override fun isAnimating(): Boolean = enter < 1f
+
     override fun draw(f: Frame) {
         val m = engine.metrics
         val ui = f.ui

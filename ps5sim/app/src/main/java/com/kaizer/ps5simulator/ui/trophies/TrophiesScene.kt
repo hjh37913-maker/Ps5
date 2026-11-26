@@ -31,6 +31,8 @@ class TrophiesScene(private val engine: Engine) : Scene {
     private var dragStart = 0f
     private var scrollStart = 0f
 
+    override fun isAnimating(): Boolean = reveal < 1f || kotlin.math.abs(target - scroll) > 0.5f
+
     override fun onShow() { reveal = 0f }
 
     override fun draw(f: Frame) {

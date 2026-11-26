@@ -38,7 +38,7 @@ object Chrome {
         val c = f.canvas
         val left = f.engine.gutter
         val top = m.px(46f)
-        val size = m.textPx(44f)
+        val size = m.textPx(50f)
 
         // tab row baseline
         val baseline = top + size * 0.82f
@@ -48,8 +48,8 @@ object Chrome {
             val w = ui.measure(t, size, Ui.Weight.Bold, letterSpacing = 0.01f)
             ui.line(
                 c, t, x, baseline, size,
-                if (active) Tok.TextPrimary else Ui.a(Tok.TextSecondary, 0.82f),
-                Ui.Weight.Bold,
+                if (active) 0xFFFFFFFF.toInt() else Ui.a(Tok.TextSecondary, 0.74f),
+                Ui.Weight.Bold, letterSpacing = 0.012f,
             )
             val pad = m.px(14f)
             val id = 9100 + i

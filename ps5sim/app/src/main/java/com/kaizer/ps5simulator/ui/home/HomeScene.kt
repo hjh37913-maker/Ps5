@@ -62,6 +62,10 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
     private var initialized = false
     private var reveal: Float = 0f
 
+    override fun isAnimating(): Boolean =
+        reveal < 1f || bgFade < 1f || metaSlide < 1f ||
+            kotlin.math.abs(mustSeeTarget - mustSeeScroll) > 0.5f
+
     override fun onShow() {
         if (!initialized) {
             initialized = true
@@ -83,6 +87,14 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
     }
 
     private fun selectedGame(): Game? = engine.game(selectedId)
+
+    /** Harness hook: focus a switcher index without simulating a touch. */
+    fun selectGameByIndex(index: Int) {
+        if (index in 0 until strip.tileCount()) {
+            strip.select(index)
+            onSelectionChanged()
+        }
+    }
 
     // ------------------------------------------------------------------ input
     override fun onDrag(x: Float, y: Float, dx: Float, dy: Float): Boolean {

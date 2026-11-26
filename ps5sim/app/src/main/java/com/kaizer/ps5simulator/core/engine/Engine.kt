@@ -123,6 +123,9 @@ class Engine(private val context: Context) {
     fun openLibrary() { (library ?: return).let { push(it, Sfx.Cue.Select) } }
     fun openStore() { (store ?: return).let { push(it, Sfx.Cue.Select) } }
     fun openMedia() { (media ?: return).let { push(it, Sfx.Cue.Select) } }
+    fun openTrophies() {
+        push(com.kaizer.ps5simulator.ui.trophies.TrophiesScene(this), Sfx.Cue.Select)
+    }
 
     fun push(scene: Scene, cue: Sfx.Cue = Sfx.Cue.Open) {
         current?.let { stack.addLast(it); it.onHide() }
@@ -288,6 +291,14 @@ class Engine(private val context: Context) {
     fun isAnimating(): Boolean =
         transitionAlpha < 1f || (controlCenter?.isAnimating() ?: false) || overlays.isAnimating() ||
             (current?.isAnimating() ?: false)
+
+    /**
+     * True when the next frame would change something. Ambient motion (dynamic
+     * background) counts as animation, so the loop runs continuously only when that
+     * option is enabled or something is actually moving — otherwise we draw on demand.
+     */
+    fun needsFrame(): Boolean =
+        isAnimating() || (settings.dynamicBackground && animationsOn)
 
     fun release() {
         sfx.release()

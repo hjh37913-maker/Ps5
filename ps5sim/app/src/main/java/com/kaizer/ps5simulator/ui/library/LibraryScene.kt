@@ -45,6 +45,8 @@ class LibraryScene(private val engine: Engine) : Scene {
     private var reveal = 0f
     private var selectedId: String? = null
 
+    override fun isAnimating(): Boolean = reveal < 1f || dragging
+
     override fun onShow() {
         rebuild()
         reveal = 0f

@@ -21,6 +21,7 @@ class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) 
         isFocusable = true
         isFocusableInTouchMode = true
         keepScreenOn = true
+        tag = TAG_SIMULATOR
         engine.invalidationCallback = { postInvalidateOnAnimation() }
         engine.init()
     }
@@ -46,7 +47,7 @@ class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) 
         super.onDraw(canvas)
         engine.draw(canvas, System.nanoTime() / 1_000_000L)
         firstFrameDrawn = true
-        if (engine.isAnimating()) postInvalidateOnAnimation()
+        if (engine.needsFrame()) postInvalidateOnAnimation()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -67,6 +68,10 @@ class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) 
     }
 
     fun handleBack(): Boolean = engine.back()
+
+    companion object {
+        const val TAG_SIMULATOR = "ps5.simulator.view"
+    }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
