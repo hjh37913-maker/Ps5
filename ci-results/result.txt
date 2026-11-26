@@ -1,0 +1,3 @@
+run_id=45875908417
+job_status=failure
+smoke=skipped
