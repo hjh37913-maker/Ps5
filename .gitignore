@@ -1,0 +1,17 @@
+# build products
+ps5sim/build/
+ps5sim/dist/
+ps5sim/app/build/
+**/*.iml
+.idea/
+.gradle/
+local.properties
+# python
+__pycache__/
+*.pyc
+# ci transcripts
+ps5sim/logcat.txt
+ps5sim/smoke-*.txt
+ps5sim/*.txt
+!ps5sim/README.md
+!ps5sim/LICENSES.md
