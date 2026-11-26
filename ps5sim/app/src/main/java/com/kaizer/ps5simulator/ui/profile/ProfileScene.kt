@@ -46,9 +46,8 @@ class ProfileScene(private val engine: Engine) : Scene {
         val g = engine.selectedGame()
         if (g != null) {
             // a barely-there wash of the selected game's accent, never a spotlight
-            ui.withAlpha(0.10f) {
-                ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx * 0.5f, g.accent,
-                    0x00000000, 0f)
+            ui.withAlpha(0.12f) {
+                ui.gradientRect(c, 0f, 0f, m.widthPx, m.px(330f), g.accent, 0x00000000, 0f)
             }
         }
         ui.scrim(c, 0f, 0f, m.widthPx, m.px(240f), 0x66000000, fromTop = true)

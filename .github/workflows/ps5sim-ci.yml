@@ -46,8 +46,12 @@ jobs:
         with:
           api-level: 29
           target: default
+          # Match the target device family: 20:9 phone class, 1280x576 won't do —
+          # a 720-wide 1600-tall profile keeps MiB small while type renders as on a phone.
+          profile: pixel_3a
           arch: x86_64
           ram-size: 2048M
+          sdcard: 512M
           cores: 2
           emulator-boot-timeout: 900
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none

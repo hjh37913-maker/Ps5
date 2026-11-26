@@ -80,7 +80,7 @@ class MediaScene(private val engine: Engine) : Scene {
         }
 
         // rows
-        val rowTop = m.px(300f)
+        val rowTop = m.px(330f)
         val cardW = m.px(330f)
         val cardH = m.px(330f)
         val gap = m.px(20f)
