@@ -1,0 +1,26 @@
++ mkdir -p shots
++ adb install -r dist/PS5InterfaceSimulator-debug.apk
++ INSTALL_RC=0
++ adb logcat -c
++ adb shell am start -n com.kaizer.ps5simulator/.MainActivity
++ sleep 10
++ adb exec-out screencap -p
++ adb shell input tap 340 200
++ sleep 2
++ adb exec-out screencap -p
++ adb shell dumpsys activity activities
++ adb shell am force-stop com.kaizer.ps5simulator
++ rm -rf shots/instrumented
++ adb shell am instrument -w -e class com.kaizer.ps5simulator.ci.ShotRunner com.kaizer.ps5simulator/.ci.ShotRunner
++ INSTRUMENT_RC=0
++ cat instrument.txt
+++ adb shell pm list instrumentation
++ RUNS='instrumentation:com.kaizer.ps5simulator/.ci.ShotRunner (target=com.kaizer.ps5simulator)'
++ echo 'instrumentation registry: instrumentation:com.kaizer.ps5simulator/.ci.ShotRunner (target=com.kaizer.ps5simulator)'
++ for base in /sdcard/Android/data/com.kaizer.ps5simulator/files/shots /sdcard/Android/data/com.kaizer.ps5simulator.debug/files/shots
++ adb pull /sdcard/Android/data/com.kaizer.ps5simulator/files/shots shots/instrumented
++ break
++ adb logcat -d -v threadtime
++ echo install=0
++ echo instrument=0
++ set +x
