@@ -1,175 +1,230 @@
 + PKG=com.kaizer.ps5simulator
 + ACT=com.kaizer.ps5simulator/.MainActivity
 + mkdir -p shots
-+ adb install -r dist/PS5InterfaceSimulator-debug.apk
++ T 180 adb install -r dist/PS5InterfaceSimulator-debug.apk
 + INSTALL_RC=0
-+ adb logcat -c
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity
-+ sleep 8
++ T 20 adb logcat -c
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb logcat -c
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity
++ sleep 6
 + shot 00_live_home
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/00_live_home.png
-+ sz=1393990
-+ echo 'shot 00_live_home 1393990B'
++ sz=1065506
++ echo 'shot 00_live_home 1065506B'
 + scenario home gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario home --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario home --es game gtavi
++ sleep 4
 + shot home
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home.png
-+ sz=1394067
-+ echo 'shot home 1394067B'
++ sz=1367547
++ echo 'shot home 1367547B'
 + scenario home_second spiderman2
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario home_second --es game spiderman2
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario home_second --es game spiderman2
++ sleep 4
 + shot home_second
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home_second.png
-+ sz=924394
-+ echo 'shot home_second 924394B'
++ sz=781612
++ echo 'shot home_second 781612B'
 + scenario hub ghostyotei
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario hub --es game ghostyotei
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario hub --es game ghostyotei
++ sleep 4
 + shot hub
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/hub.png
-+ sz=484687
-+ echo 'shot hub 484687B'
++ sz=474134
++ echo 'shot hub 474134B'
 + scenario library gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario library --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario library --es game gtavi
++ sleep 4
 + shot library
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/library.png
-+ sz=997363
-+ echo 'shot library 997363B'
++ sz=986755
++ echo 'shot library 986755B'
 + scenario control_center ghostyotei
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario control_center --es game ghostyotei
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario control_center --es game ghostyotei
++ sleep 4
 + shot control_center
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/control_center.png
-+ sz=526368
-+ echo 'shot control_center 526368B'
++ sz=436748
++ echo 'shot control_center 436748B'
 + scenario profile gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario profile --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario profile --es game gtavi
++ sleep 4
 + shot profile
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/profile.png
-+ sz=266504
-+ echo 'shot profile 266504B'
++ sz=252580
++ echo 'shot profile 252580B'
 + scenario settings gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario settings --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario settings --es game gtavi
++ sleep 4
 + shot settings
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/settings.png
-+ sz=139028
-+ echo 'shot settings 139028B'
++ sz=137292
++ echo 'shot settings 137292B'
 + scenario trophies gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario trophies --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario trophies --es game gtavi
++ sleep 4
 + shot trophies
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/trophies.png
-+ sz=214378
-+ echo 'shot trophies 214378B'
++ sz=217385
++ echo 'shot trophies 217385B'
 + scenario store gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario store --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario store --es game gtavi
++ sleep 4
 + shot store
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/store.png
-+ sz=669624
-+ echo 'shot store 669624B'
++ sz=649612
++ echo 'shot store 649612B'
 + scenario launch gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario launch --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario launch --es game gtavi
++ sleep 4
 + shot launch
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/launch.png
-+ sz=453198
-+ echo 'shot launch 453198B'
++ sz=452840
++ echo 'shot launch 452840B'
 + scenario media gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario media --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario media --es game gtavi
++ sleep 4
 + shot media
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/media.png
-+ sz=525094
-+ echo 'shot media 525094B'
++ sz=502486
++ echo 'shot media 502486B'
 + scenario gallery gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
++ T 20 adb shell am force-stop com.kaizer.ps5simulator
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell am force-stop com.kaizer.ps5simulator
 + sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario gallery --es game gtavi
-+ sleep 5
++ T 30 adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario gallery --es game gtavi
++ sleep 4
 + shot gallery
-+ adb exec-out screencap -p
++ T 40 adb exec-out screencap -p
++ local secs=40
++ shift
++ timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/gallery.png
-+ sz=662474
-+ echo 'shot gallery 662474B'
-+ adb shell settings put system accelerometer_rotation 0
-+ adb shell settings put system user_rotation 0
-+ sleep 3
-+ scenario portrait_home gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
-+ sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario portrait_home --es game gtavi
-+ sleep 5
-+ shot portrait_home
-+ adb exec-out screencap -p
-+ local sz
-++ stat -c%s shots/portrait_home.png
-+ sz=906661
-+ echo 'shot portrait_home 906661B'
-+ scenario portrait_library gtavi
-+ adb shell am force-stop com.kaizer.ps5simulator
-+ sleep 1
-+ adb shell am start -n com.kaizer.ps5simulator/.MainActivity --es scenario portrait_library --es game gtavi
-+ sleep 5
-+ shot portrait_library
-+ adb exec-out screencap -p
-+ local sz
-++ stat -c%s shots/portrait_library.png
-+ sz=906583
-+ echo 'shot portrait_library 906583B'
-+ adb shell settings put system user_rotation 1
-+ adb logcat -d -v threadtime
++ sz=663467
++ echo 'shot gallery 663467B'
++ T 60 adb logcat -d -v threadtime
++ local secs=60
++ shift
++ timeout --kill-after=5 60 adb logcat -d -v threadtime
 + echo install=0
 + set +x
