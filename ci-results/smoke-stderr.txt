@@ -1,6 +1,10 @@
 + PKG=com.kaizer.ps5simulator
 + ACT=com.kaizer.ps5simulator/.MainActivity
 + mkdir -p shots
++ T 20 adb shell settings put secure immersive_mode_confirmations confirmed
++ local secs=20
++ shift
++ timeout --kill-after=5 20 adb shell settings put secure immersive_mode_confirmations confirmed
 + T 180 adb install -r dist/PS5InterfaceSimulator-debug.apk
 + INSTALL_RC=0
 + T 20 adb logcat -c
@@ -16,8 +20,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/00_live_home.png
-+ sz=1123797
-+ echo 'shot 00_live_home 1123797B'
++ sz=1081999
++ echo 'shot 00_live_home 1081999B'
 + scenario home gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -33,8 +37,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home.png
-+ sz=1301966
-+ echo 'shot home 1301966B'
++ sz=1301737
++ echo 'shot home 1301737B'
 + scenario home_second spiderman2
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -50,8 +54,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home_second.png
-+ sz=765525
-+ echo 'shot home_second 765525B'
++ sz=1330991
++ echo 'shot home_second 1330991B'
 + scenario hub ghostyotei
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -67,8 +71,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/hub.png
-+ sz=428355
-+ echo 'shot hub 428355B'
++ sz=665519
++ echo 'shot hub 665519B'
 + scenario library gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -84,8 +88,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/library.png
-+ sz=966723
-+ echo 'shot library 966723B'
++ sz=1559838
++ echo 'shot library 1559838B'
 + scenario control_center ghostyotei
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -101,8 +105,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/control_center.png
-+ sz=427537
-+ echo 'shot control_center 427537B'
++ sz=706614
++ echo 'shot control_center 706614B'
 + scenario profile gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -118,8 +122,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/profile.png
-+ sz=171082
-+ echo 'shot profile 171082B'
++ sz=265384
++ echo 'shot profile 265384B'
 + scenario settings gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -135,8 +139,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/settings.png
-+ sz=137070
-+ echo 'shot settings 137070B'
++ sz=122257
++ echo 'shot settings 122257B'
 + scenario trophies gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -152,8 +156,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/trophies.png
-+ sz=176848
-+ echo 'shot trophies 176848B'
++ sz=194341
++ echo 'shot trophies 194341B'
 + scenario store gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -169,8 +173,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/store.png
-+ sz=613601
-+ echo 'shot store 613601B'
++ sz=1013942
++ echo 'shot store 1013942B'
 + scenario launch gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -186,8 +190,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/launch.png
-+ sz=451500
-+ echo 'shot launch 451500B'
++ sz=817534
++ echo 'shot launch 817534B'
 + scenario media gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -203,8 +207,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/media.png
-+ sz=469909
-+ echo 'shot media 469909B'
++ sz=850687
++ echo 'shot media 850687B'
 + scenario gallery gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -220,8 +224,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/gallery.png
-+ sz=634598
-+ echo 'shot gallery 634598B'
++ sz=1050052
++ echo 'shot gallery 1050052B'
 + T 60 adb logcat -d -v threadtime
 + local secs=60
 + shift
