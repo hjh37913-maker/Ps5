@@ -30,6 +30,39 @@ class MainActivity : Activity() {
         val v = SimulatorView(this)
         view = v
         setContentView(v)
+        applyIntentScenario(v)
+    }
+
+    /**
+     * Screenshot harness entry point. Used by the CI instrumentation runner and by the
+     * debug-only automation scripts; it never exists in release builds.
+     */
+    private fun applyIntentScenario(v: SimulatorView) {
+        val debuggable = (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        if (!debuggable) return
+        val action = intent?.action ?: return
+        if (action != ACTION_SCENARIO) return
+        val scenario = intent.getStringExtra(EXTRA_SCENARIO) ?: "home"
+        v.postDelayed({
+            when (scenario) {
+                "library" -> v.engine.openLibrary()
+                "store" -> v.engine.openStore()
+                "store_detail" -> v.engine.openHub("gtavi")
+                "hub" -> v.engine.openHub("ghostyotei")
+                "control_center" -> v.engine.openControlCenter()
+                "profile" -> v.engine.openProfile()
+                "settings" -> v.engine.openSettings()
+                "launch" -> v.engine.openLaunch(v.engine.game("gtavi")!!)
+                "home_second" -> v.engine.home?.let { }
+                "trophies" -> v.engine.showInfo("Trophies", "Screenshot scenario stub")
+                else -> Unit
+            }
+        }, 450L)
+    }
+
+    companion object {
+        const val ACTION_SCENARIO = "com.kaizer.ps5simulator.SCENARIO"
+        const val EXTRA_SCENARIO = "scenario"
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

@@ -8,9 +8,12 @@ import com.kaizer.ps5simulator.core.design.Metrics
 import com.kaizer.ps5simulator.core.engine.Engine
 
 /** Hosts the engine and drives it with a vsync-aligned invalidate loop. */
-class SimulatorView(context: Context) : View(context) {
+class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) : View(context, attrs) {
 
-    private val engine = Engine(context)
+    val engine = Engine(context)
+    /** True once the first frame has been composed (used by tests to wait for a stable UI). */
+    var firstFrameDrawn = false
+        private set
     private var lastX = 0f
     private var lastY = 0f
 
@@ -42,6 +45,7 @@ class SimulatorView(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         engine.draw(canvas, System.nanoTime() / 1_000_000L)
+        firstFrameDrawn = true
         if (engine.isAnimating()) postInvalidateOnAnimation()
     }
 

@@ -687,22 +687,37 @@ def make_game_assets(g):
         sc, _ = scene(g, 800, 450, 40 + k * 7)
         sc = finish(sc, 800, 450)
         sc.save(os.path.join(out, f"shot{k + 1}.jpg"), quality=82, optimize=True, progressive=True)
-    # ---- hero emblem: transparent version of the tagline mark (used on Game Hub)
-    hw, hh = 640, 360
+    # ---- hero lockup: transparent game-title logotype in the console key-art style
+    #      (two text rows: title in heavy caps, accent tagline letter-spaced under it)
+    hw, hh = 960, 320
     hero = Image.new("RGBA", (hw, hh), (0, 0, 0, 0))
     hd = ImageDraw.Draw(hero)
-    tag = g[11]
-    f = F(800, int(hh * 0.30))
-    while hd.textlength(tag, font=f) > hw * 0.92 and f.size > 10:
+    title_words = g[1].replace(":", "").split()
+    # split into up to two rows of similar width
+    rows = [g[1]] if len(title_words) <= 2 else [
+        " ".join(title_words[: len(title_words) // 2]),
+        " ".join(title_words[len(title_words) // 2:]),
+    ]
+    size = int(hh * (0.46 if len(rows) == 1 else 0.34))
+    f = F(800, size)
+    while max(hd.textlength(r, font=f) for r in rows) > hw * 0.98 and f.size > 12:
         f = F(800, f.size - 2)
-    # keyline box + tagline
-    hd.rectangle([0, 0, hw - 1, hh - 1], outline=(255, 255, 255, 18), width=2)
-    sp = f.size * 0.16
-    tw = sum(hd.textlength(c, font=f) + sp for c in tag) - sp
-    cx = (hw - tw) / 2
+    # subtle drop shadow so the type keeps contrast on bright art
+    y = hh * 0.10
+    for i, r in enumerate(rows):
+        hd.text((6, y + i * f.size * 1.02 + 4), r, font=f, fill=(0, 0, 0, 140))
+        hd.text((0, y + i * f.size * 1.02), r, font=f, fill=(255, 255, 255, 248))
+    # accent tagline with letterspacing
+    tag = g[11]
+    ft = F(700, max(11, int(f.size * 0.20)))
+    sp = ft.size * 0.34
+    tw = sum(hd.textlength(c, font=ft) + sp for c in tag) - sp
+    ty = y + len(rows) * f.size * 1.02 + ft.size * 0.55
+    cx = 0
     for ch in tag:
-        hd.text((cx, hh * 0.36), ch, font=f, fill=(255, 255, 255, 235))
-        cx += hd.textlength(ch, font=f) + sp
+        hd.text((cx + 3, ty + 2), ch, font=ft, fill=(0, 0, 0, 120))
+        hd.text((cx, ty), ch, font=ft, fill=(*g[3], 255))
+        cx += hd.textlength(ch, font=ft) + sp
     hero.save(os.path.join(out, "hero.png"), optimize=True)
     return gid
 

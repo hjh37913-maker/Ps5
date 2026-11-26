@@ -248,26 +248,29 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
     private fun mediaArt(): Game? =
         mediaTiles.getOrNull((strip.selected - 1).coerceAtLeast(0) % mediaTiles.size.coerceAtLeast(1))
 
+    /**
+     * Artwork window. In the console capture the key art occupies the horizontal band
+     * between the top chrome and the "Must see" row (y 199…~860 of 1080); above and
+     * below the background is graded to near-black. We reproduce that window instead of
+     * stretching the art full-bleed, which is what makes the home screen read as PS5.
+     */
     private fun drawBackdrop(f: Frame, g: Game?, alpha: Float) {
         val m = engine.metrics
         val c = f.canvas
         val ui = f.ui
-        if (g == null) {
-            ui.rect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF05060A.toInt())
-            return
-        }
-        ui.rect(c, 0f, 0f, m.widthPx, m.heightPx, g.deep)
-        val bmp = Art.get(g.artwork, (m.widthPx).toInt(), (m.heightPx).toInt())
+        ui.rect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF04050A.toInt())
+        if (g == null) return
+        val artTop = m.px(146f)
+        val artBottom = m.heightPx - m.px(Ref.MUSTSEE_CARD_H) - m.px(64f)
+        val bmp = Art.get(g.artwork, (m.widthPx).toInt(), (artBottom - artTop).toInt().coerceAtLeast(64))
         if (bmp != null) {
             ui.withAlpha(alpha) {
-                Draw.coverBias(c, bmp, 0f, 0f, m.widthPx, m.heightPx, 0.5f, 0.42f,
-                    if (ui.alpha > 0f) 1f else 0f)
+                Draw.coverBias(c, bmp, 0f, artTop, m.widthPx, artBottom, 0.5f, 0.30f)
             }
         } else {
-            // blurred accent wash while the artwork decodes
-            ui.withAlpha(alpha * 0.85f) {
-                ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, g.accent, g.deep)
-                ui.glow(c, m.widthPx * 0.62f, m.heightPx * 0.42f, m.widthPx * 0.42f, g.accent)
+            ui.withAlpha(alpha * 0.9f) {
+                ui.gradientRect(c, 0f, artTop, m.widthPx, artBottom, g.accent, g.deep)
+                ui.glow(c, m.widthPx * 0.62f, (artTop + artBottom) / 2f, m.widthPx * 0.42f, g.accent)
             }
         }
         // dynamic light drift (disabled by "dynamic background" in settings)
@@ -297,15 +300,14 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         val a = alpha * Ease.soft(metaSlide)
 
         ui.withAlpha(a) {
-            val bmp = Art.get("file:///android_asset/games/${g.id}/hero.png", 960, 540)
+            val bmp = Art.get("file:///android_asset/games/${g.id}/hero.png", 960, 320)
             val logoH = m.px(Ref.SPOTLIGHT_LOGO_MAX_H)
             val logoW = m.px(Ref.SPOTLIGHT_LOGO_MAX_W)
             val logoBottom = m.heightPx - m.px(Ref.SPOTLIGHT_LOGO_BOTTOM)
             val ly = logoBottom - logoH
             if (bmp != null) {
-                ui.clip(c, left - slide, ly, left + logoW - slide, ly + logoH) {
-                    Draw.inside(c, bmp, left - slide, ly, left + logoW - slide, ly + logoH)
-                }
+                // lockup is left-aligned: draw at its natural width, fitted into the box
+                Draw.inside(c, bmp, left - slide, ly, left + logoW - slide, ly + logoH)
             }
             // meta row (measured ~25 units under the logo block)
             val metaSize = m.textPx(Ref.SPOTLIGHT_META_SIZE)

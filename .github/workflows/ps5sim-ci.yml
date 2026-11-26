@@ -64,6 +64,8 @@ jobs:
             ps5sim/smoke-status.txt
             ps5sim/resumed.txt
             ps5sim/install.txt
+            ps5sim/instrument.txt
+            ps5sim/shots/instrumented/shots/*.png
           if-no-files-found: warn
       - name: Publish results
         if: always()
@@ -72,6 +74,9 @@ jobs:
           mkdir -p ../ci-results/shots
           rm -f ../ci-results/shots/*.png
           cp shots/*.png ../ci-results/shots/ 2>/dev/null || true
+          cp shots/instrumented/shots/*.png ../ci-results/shots/ 2>/dev/null || true
+          cp shots/instrumented/shots/summary.txt ../ci-results/ 2>/dev/null || true
+          cp shots/instrument.txt ../ci-results/ 2>/dev/null || true
           cp smoke-status.txt logcat.txt ../ci-results/ 2>/dev/null || true
           printf 'run_id=%s\njob_status=%s\nsmoke=%s\n' "$GITHUB_RUN_ID" "${{ job.status }}" "${{ steps.smoke.outcome }}" > ../ci-results/result.txt
           git config user.name "github-actions[bot]"
@@ -79,6 +84,6 @@ jobs:
           git add -A ../ci-results || true
           if ! git diff --cached --quiet; then
             git commit -m "CI screenshots (run $GITHUB_RUN_ID)" --quiet
-            git pull --rebase origin main || true
-            git push origin HEAD:main
+            true
+            git push origin HEAD:arena/e0420214-ps5
           fi
