@@ -63,16 +63,17 @@ object Ref {
     const val MUSTSEE_BOTTOM = 51f
 
     /** Control Center dock. */
-    const val CC_DOCK_HEIGHT = 84f
-    const val CC_ICON_SIZE = 42f
-    const val CC_ICON_GAP = 34f
+    const val CC_DOCK_HEIGHT = 96f
+    const val CC_ICON_SIZE = 34f
+    const val CC_ICON_GAP = 26f
     const val CC_DOCK_BOTTOM = 0f
     const val CC_CARD_W = 348f
     const val CC_CARD_RADIUS = 22f
     const val CC_CARD_GAP = 22f
     const val CC_CARD_MEDIA_H = 470f
     const val CC_CARD_MEDIA_H_FOCUSED = 520f
-    const val CC_CARD_BOTTOM_GAP = 132f
+    /** Cards sit exactly on top of the dock (100-unit dock + 24 breathing room). */
+    const val CC_CARD_BOTTOM_GAP = 124f
 
     /** Library. */
     const val LIB_TILE_SIZE = 276f

@@ -40,9 +40,19 @@ class SettingsScene(private val engine: Engine) : Scene {
         if (engine.animationsOn) reveal = (reveal + f.dtMs / 260f).coerceAtMost(1f) else reveal = 1f
         val a = Ease.soft(reveal)
 
-        ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF12141C.toInt(), 0xFF06070A.toInt())
-        ui.glow(c, m.widthPx * 0.2f, m.px(80f), m.widthPx * 0.45f, 0x1A4D8DF6.toInt())
-        Chrome.backRow(f, "Settings")
+        // Dimmed console behind the sheet: keeps the screen in the console's visual family
+        // instead of looking like a bare Android settings page.
+        val bg = engine.selectedGame()
+        if (bg != null) {
+            val bmp = com.kaizer.ps5simulator.core.gfx.Art.get(
+                bg.artwork, m.widthPx.toInt(), m.heightPx.toInt())
+            if (bmp != null) {
+                com.kaizer.ps5simulator.core.gfx.Draw.cover(c, bmp, 0f, 0f, m.widthPx, m.heightPx)
+            }
+        }
+        // translucent vertical grade so the sheet still reads as glass over the console
+        ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, 0xD90A0B0F.toInt(), 0xF207080B.toInt())
+        Chrome.backRow(f, engine.s("settings"))
 
         ui.withAlpha(a) {
             val left = engine.gutter

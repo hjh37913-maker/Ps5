@@ -160,8 +160,8 @@ class ControlCenterScene(private val engine: Engine) : Scene {
                     }
                 }
             }
-            // scroll hint dots under the first card (console shows position subtly)
-            if (cards.size > 1) {
+            // (the reference shows no pagination dots: the row simply scrolls)
+            if (false && cards.size > 1) {
                 val dots = cards.size
                 val dw = m.px(6f)
                 val gapD = m.px(8f)
@@ -191,7 +191,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
         val m = engine.metrics
         val ui = f.ui
         val c = f.canvas
-        val dockBottom = m.heightPx - m.px(16f)
+        val dockBottom = m.heightPx - m.px(34f)
         val iconSize = m.px(Ref.CC_ICON_SIZE)
         val labelGap = m.px(18f)
         val labelSize = m.textPx(18f)
@@ -201,12 +201,13 @@ class ControlCenterScene(private val engine: Engine) : Scene {
         val arise = (1f - ease) * m.px(40f)
 
         // the focused glyph keeps a label under the dock, as on console
-        val focusedLabel = engine.s(glyphLabels[if (expandedGlyph >= 0) expandedGlyph else 0])
+        val focusedLabel = if (expandedGlyph >= 0) engine.s(glyphLabels[expandedGlyph]) else ""
+
 
         ui.withAlpha(ease) {
             // dock backdrop: soft dark plate so the glyphs always read
             ui.rect(c, 0f, cy - iconSize + arise, m.widthPx, m.heightPx, 0x00000000.toInt(), 0f)
-            val plateTop = cy - iconSize * 1.1f
+            val plateTop = cy - iconSize * 1.35f
             ui.scrim(c, 0f, plateTop, m.widthPx, m.heightPx, 0xE6000000.toInt(), fromTop = false)
 
             glyphs.forEachIndexed { i, g ->
@@ -214,11 +215,9 @@ class ControlCenterScene(private val engine: Engine) : Scene {
                 val isFocus = i == expandedGlyph
                 // focus ring
                 if (isFocus) {
-                    ui.circle(c, gx + iconSize / 2f, cy + arise, iconSize * 0.86f,
-                        0x33FFFFFF.toInt())
-                    ui.rectOutline(c, gx - iconSize * 0.36f, cy - iconSize * 0.86f + arise,
-                        gx + iconSize * 1.36f, cy + iconSize * 0.86f + arise,
-                        0xCCFFFFFF.toInt(), iconSize * 0.86f, 2f)
+                    ui.rectOutline(c, gx - iconSize * 0.34f, cy - iconSize * 0.94f + arise,
+                        gx + iconSize * 1.34f, cy + iconSize * 0.94f + arise,
+                        0xD9FFFFFF.toInt(), iconSize * 0.92f, 2f)
                 }
                 val alphaColor = if (isFocus) 0xFFFFFFFF.toInt() else Ui.a(Tok.Glyph, 0.88f)
                 drawDockGlyph(f, g, gx + iconSize / 2f, cy + arise, iconSize, alphaColor, i)
@@ -229,10 +228,12 @@ class ControlCenterScene(private val engine: Engine) : Scene {
                 x = gx - i * (iconSize + m.px(Ref.CC_ICON_GAP)) // keep loop tidy
             }
 
-            // label under the focused glyph
-            ui.line(c, focusedLabel, m.widthPx / 2f, m.heightPx - m.px(10f) + arise,
-                labelSize, Ui.a(Tok.TextPrimary, 0.85f), Ui.Weight.Medium,
-                align = Paint.Align.CENTER)
+            // label under the focused glyph only
+            if (focusedLabel.isNotEmpty()) {
+                ui.line(c, focusedLabel, m.widthPx / 2f, m.heightPx - m.px(8f) + arise,
+                    labelSize, Ui.a(Tok.TextPrimary, 0.85f), Ui.Weight.Medium,
+                    align = Paint.Align.CENTER)
+            }
         }
     }
 

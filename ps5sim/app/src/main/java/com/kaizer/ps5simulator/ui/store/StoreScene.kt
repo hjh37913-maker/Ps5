@@ -45,17 +45,17 @@ class StoreScene(private val engine: Engine) : Scene {
 
         ui.withAlpha(a) {
             val left = engine.gutter
-            ui.line(c, engine.s("featured"), left, m.px(150f), m.textPx(44f), 0xFFFFFFFF.toInt(),
+            ui.line(c, engine.s("featured"), left, m.px(232f), m.textPx(44f), 0xFFFFFFFF.toInt(),
                 Ui.Weight.Display)
             hero?.let { g ->
-                ui.lineFit(c, g.title, left, m.px(210f), m.widthPx * 0.5f, m.textPx(30f),
-                    0xFFFFFFFF.toInt(), Ui.Weight.Bold)
-                ui.line(c, "${g.genre} · ${g.publisher} · ${g.year}", left, m.px(246f),
-                    m.textPx(20f), Ui.a(Tok.TextSecondary, 0.85f), Ui.Weight.Medium)
+                ui.lineFit(c, g.title, left, m.px(268f), m.widthPx * 0.5f, m.textPx(26f),
+                    0xFFFFFFFF.toInt(), Ui.Weight.Medium)
+                ui.line(c, "${g.genre} · ${g.publisher} · ${g.year}", left, m.px(300f),
+                    m.textPx(19f), Ui.a(Tok.TextSecondary, 0.85f), Ui.Weight.Medium)
                 val price = "£69.99"
                 val bw = m.px(420f)
                 val bh = m.px(78f)
-                val by = m.px(290f)
+                val by = m.px(322f)
                 ui.rect(c, left, by, left + bw, by + bh, 0xE6FFFFFF.toInt(), bh / 2f)
                 ui.line(c, engine.s("add_library"), left + m.px(30f), by + bh / 2f + m.textPx(9f),
                     m.textPx(23f), 0xFF0B0B10.toInt(), Ui.Weight.Bold)

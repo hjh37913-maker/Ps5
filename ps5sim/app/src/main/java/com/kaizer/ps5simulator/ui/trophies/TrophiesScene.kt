@@ -44,9 +44,8 @@ class TrophiesScene(private val engine: Engine) : Scene {
         val list = Catalog.trophies
 
         // reference background: warm grey vignette (trophy screens use a light-diffused backdrop)
-        ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF3A3A3C.toInt(),
-            0xFF141416.toInt())
-        ui.glow(c, m.widthPx * 0.18f, m.px(60f), m.widthPx * 0.5f, 0x40FFFFFF.toInt())
+        ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF46464A.toInt(),
+            0xFF111113.toInt())
         ui.scrim(c, 0f, 0f, m.widthPx, m.heightPx, 0x33000000.toInt(), fromTop = true)
 
         Chrome.backRow(f, "")
