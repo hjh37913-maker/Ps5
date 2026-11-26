@@ -16,8 +16,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/00_live_home.png
-+ sz=1078691
-+ echo 'shot 00_live_home 1078691B'
++ sz=1123797
++ echo 'shot 00_live_home 1123797B'
 + scenario home gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -33,8 +33,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home.png
-+ sz=1123770
-+ echo 'shot home 1123770B'
++ sz=1301966
++ echo 'shot home 1301966B'
 + scenario home_second spiderman2
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -50,8 +50,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/home_second.png
-+ sz=765620
-+ echo 'shot home_second 765620B'
++ sz=765525
++ echo 'shot home_second 765525B'
 + scenario hub ghostyotei
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -67,8 +67,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/hub.png
-+ sz=428617
-+ echo 'shot hub 428617B'
++ sz=428355
++ echo 'shot hub 428355B'
 + scenario library gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -84,8 +84,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/library.png
-+ sz=966875
-+ echo 'shot library 966875B'
++ sz=966723
++ echo 'shot library 966723B'
 + scenario control_center ghostyotei
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -101,8 +101,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/control_center.png
-+ sz=427401
-+ echo 'shot control_center 427401B'
++ sz=427537
++ echo 'shot control_center 427537B'
 + scenario profile gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -118,8 +118,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/profile.png
-+ sz=171179
-+ echo 'shot profile 171179B'
++ sz=171082
++ echo 'shot profile 171082B'
 + scenario settings gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
@@ -203,8 +203,8 @@
 + timeout --kill-after=5 40 adb exec-out screencap -p
 + local sz
 ++ stat -c%s shots/media.png
-+ sz=470066
-+ echo 'shot media 470066B'
++ sz=469909
++ echo 'shot media 469909B'
 + scenario gallery gtavi
 + T 20 adb shell am force-stop com.kaizer.ps5simulator
 + local secs=20
