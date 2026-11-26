@@ -31,8 +31,30 @@ object Art {
     private var cache: LruCache<String, Bitmap>? = null
     private var appContext: Context? = null
 
-    /** Requests that arrived while nothing was decoded yet; triggers invalidation. */
+    /** Called on the UI thread the first time a decode completes in a burst. */
     var invalidate: () -> Unit = {}
+
+    private var pendingInvalidate = false
+    private val pendingLock = Any()
+
+    /** True while any decode is in flight — the frame loop keeps polling until it lands. */
+    fun isBusy(): Boolean = inflight.isNotEmpty()
+
+    /**
+     * Coalesced repaint request.
+     *
+     * A screen can ask for a dozen bitmaps in one frame; posting a repaint per bitmap
+     * would thrash the renderer. We post at most one per burst, on the next loop.
+     */
+    private fun requestRepaint() {
+        val post = synchronized(pendingLock) {
+            if (pendingInvalidate) false else { pendingInvalidate = true; true }
+        }
+        if (post) main.post {
+            synchronized(pendingLock) { pendingInvalidate = false }
+            invalidate()
+        }
+    }
 
     fun init(context: Context) {
         if (cache != null) return
@@ -54,10 +76,8 @@ object Art {
                 val bmp = decode(path, targetW, targetH)
                 main.post {
                     inflight.remove(k)
-                    if (bmp != null) {
-                        c.put(k, bmp)
-                        invalidate()
-                    }
+                    if (bmp != null) c.put(k, bmp)
+                    requestRepaint()
                 }
             }
         }

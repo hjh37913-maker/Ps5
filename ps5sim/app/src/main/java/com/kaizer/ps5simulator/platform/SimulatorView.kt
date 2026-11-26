@@ -22,6 +22,8 @@ class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) 
         isFocusableInTouchMode = true
         keepScreenOn = true
         tag = TAG_SIMULATOR
+        // newly decoded artwork must be painted even when nothing is animating
+        com.kaizer.ps5simulator.core.gfx.Art.invalidate = { postInvalidateOnAnimation() }
         engine.invalidationCallback = { postInvalidateOnAnimation() }
         engine.init()
     }
@@ -67,7 +69,9 @@ class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) 
         engine.draw(canvas, System.nanoTime() / 1_000_000L)
         canvas.restore()
         firstFrameDrawn = true
-        if (engine.needsFrame()) postInvalidateOnAnimation()
+        if (engine.needsFrame() || com.kaizer.ps5simulator.core.gfx.Art.isBusy()) {
+            postInvalidateOnAnimation()
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
