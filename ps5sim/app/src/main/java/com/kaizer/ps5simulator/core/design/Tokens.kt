@@ -195,6 +195,12 @@ data class Metrics(
     /** Reference text size -> device pixels (use with Ui.line / Ui.paragraph). */
     fun textPx(size: Float): Float = size * u
 
+    /** True when the device is held in portrait; layouts then stack instead of overlap. */
+    val portrait: Boolean get() = heightPx > widthPx
+
+    /** In portrait we scale the console plane so 16:9 chrome keeps its size. */
+    val portraitScale: Float get() = if (portrait) 0.66f else 1f
+
     val safeLeft: Float get() = insetLeftPx
     val safeRight: Float get() = widthPx - insetRightPx
     val safeTop: Float get() = insetTopPx

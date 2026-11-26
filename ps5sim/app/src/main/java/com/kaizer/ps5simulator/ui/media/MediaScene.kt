@@ -69,18 +69,18 @@ class MediaScene(private val engine: Engine) : Scene {
         ui.scrim(c, 0f, 0f, m.widthPx, m.heightPx * 0.8f, 0xCC000000.toInt(), fromTop = true)
         ui.scrim(c, 0f, m.heightPx * 0.45f, m.widthPx, m.heightPx, 0xEB000000.toInt(), fromTop = false)
 
-        Chrome.topBar(f, 1, listOf("Games", "Media"), onTab = { i -> if (i == 0) engine.popToRoot() },
+        Chrome.topBar(f, 1, listOf(engine.s("games"), engine.s("media")), onTab = { i -> if (i == 0) engine.popToRoot() },
             showClock = engine.settings.showClock)
 
         val left = engine.gutter
         ui.withAlpha(a) {
-            ui.line(c, "Media", left, m.px(220f), m.textPx(62f), 0xFFFFFFFF.toInt(), Ui.Weight.Display)
-            ui.line(c, "Videos and music from your library", left, m.px(268f), m.textPx(26f),
+            ui.line(c, engine.s("media"), left, m.px(206f), m.textPx(58f), 0xFFFFFFFF.toInt(), Ui.Weight.Display)
+            ui.line(c, engine.s("media_sub"), left, m.px(250f), m.textPx(24f),
                 Ui.a(Tok.TextSecondary, 0.85f), Ui.Weight.Medium)
         }
 
         // rows
-        val rowTop = m.px(330f)
+        val rowTop = m.px(300f)
         val cardW = m.px(330f)
         val cardH = m.px(330f)
         val gap = m.px(20f)

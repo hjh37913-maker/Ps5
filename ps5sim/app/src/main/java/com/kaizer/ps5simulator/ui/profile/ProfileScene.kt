@@ -44,13 +44,18 @@ class ProfileScene(private val engine: Engine) : Scene {
         ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx, 0xFF10131C.toInt(),
             0xFF06070A.toInt())
         val g = engine.selectedGame()
-        if (g != null) ui.glow(c, m.widthPx * 0.78f, m.heightPx * 0.18f, m.widthPx * 0.42f,
-            Ui.a(g.accent, 0.30f))
-        ui.scrim(c, 0f, 0f, m.widthPx, m.heightPx, 0x59000000.toInt(), fromTop = true)
+        if (g != null) {
+            // a barely-there wash of the selected game's accent, never a spotlight
+            ui.withAlpha(0.10f) {
+                ui.gradientRect(c, 0f, 0f, m.widthPx, m.heightPx * 0.5f, g.accent,
+                    0x00000000, 0f)
+            }
+        }
+        ui.scrim(c, 0f, 0f, m.widthPx, m.px(240f), 0x66000000, fromTop = true)
 
-        Chrome.topBar(f, 0, listOf("Games", "Media"), onTab = { i -> if (i == 1) engine.openMedia() },
+        Chrome.topBar(f, 0, listOf(engine.s("games"), engine.s("media")), onTab = { i -> if (i == 1) engine.openMedia() },
             showClock = engine.settings.showClock)
-        Chrome.backRow(f, "Profile")
+        Chrome.backRow(f, engine.s("profile"))
 
         ui.withAlpha(a) {
             val left = engine.gutter
@@ -82,7 +87,7 @@ class ProfileScene(private val engine: Engine) : Scene {
             // level progress
             val ly = y + r * 2f + m.px(30f)
             val lw = m.widthPx * 0.34f
-            ui.line(c, "Trophy level ${Catalog.profile.trophyLevel}", left, ly, m.textPx(21f),
+            ui.line(c, "${engine.s("trophy_level")} ${Catalog.profile.trophyLevel}", left, ly, m.textPx(21f),
                 Ui.a(Tok.TextPrimary, 0.9f), Ui.Weight.Medium)
             ui.line(c, "${Catalog.profile.levelPercent}%", left + lw, ly, m.textPx(21f),
                 Ui.a(Tok.TextSecondary, 0.8f), Ui.Weight.Medium, align = Paint.Align.RIGHT)
@@ -103,7 +108,7 @@ class ProfileScene(private val engine: Engine) : Scene {
                 Icons.draw(c, glyph, x + m.px(11f), y + m.px(4f), m.px(22f), color, m.px(1.8f))
                 val w = ui.line(c, count.toString(), x + m.px(30f), y + m.px(10f),
                     m.textPx(24f), 0xFFFFFFFF.toInt(), Ui.Weight.Bold)
-                x += 30f * m.u + w + m.px(34f)
+                x += m.px(30f) + w + m.px(38f)
             }
             engine.hits.add(left, y - m.px(16f), left + m.px(460f), y + m.px(26f), 16001) {
                 engine.push(TrophiesScene(engine), Sfx.Cue.Select)
@@ -111,7 +116,7 @@ class ProfileScene(private val engine: Engine) : Scene {
 
             // tabs
             y += m.px(56f)
-            val tabs = listOf("Overview", "Friends", "Activity")
+            val tabs = listOf(engine.s("overview"), engine.s("friends"), engine.s("activity"))
             var tx2 = left
             tabs.forEachIndexed { i, t ->
                 val s = m.textPx(23f)
@@ -143,7 +148,7 @@ class ProfileScene(private val engine: Engine) : Scene {
         val ui = f.ui
         val c = f.canvas
         // recently played row
-        ui.line(c, "Recently played", left, top + m.px(14f), m.textPx(26f),
+        ui.line(c, engine.s("recently_played"), left, top + m.px(14f), m.textPx(26f),
             Ui.a(Tok.TextPrimary, 0.92f), Ui.Weight.Medium)
         val tile = m.px(150f)
         val gap = m.px(16f)
@@ -165,9 +170,9 @@ class ProfileScene(private val engine: Engine) : Scene {
         // quick actions
         var y = top + m.px(34f) + tile + m.px(36f)
         val actions = listOf(
-            Triple(Glyph.Trophy, "Trophies", { engine.push(TrophiesScene(engine), Sfx.Cue.Select) }),
-            Triple(Glyph.Settings, "Profile settings", { engine.openSettings() }),
-            Triple(Glyph.Library, "Game library", { engine.openLibrary() }),
+            Triple(Glyph.Trophy, engine.s("trophies"), { engine.push(TrophiesScene(engine), Sfx.Cue.Select) }),
+            Triple(Glyph.Settings, engine.s("settings"), { engine.openSettings() }),
+            Triple(Glyph.Library, engine.s("game_library"), { engine.openLibrary() }),
         )
         actions.forEachIndexed { i, (glyph, label, action) ->
             val rowY = y + i * m.px(58f)

@@ -26,13 +26,28 @@ class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) 
         engine.init()
     }
 
+    /**
+     * Layout plane. The console interface is authored on a 16:9 artboard; in portrait we
+     * letterbox that artboard (full width, vertically centred) instead of reflowing it,
+     * so nothing is ever cropped or stretched — the same rule the console's own output
+     * scaler follows. In landscape it fills the screen.
+     */
+    private var artboardTop = 0f
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        computeMetrics(w, h)
+    }
+
+    fun computeMetrics(w: Int, h: Int) {
         val dm = resources.displayMetrics
+        val portrait = h > w
+        val artH = if (portrait) (w * 9f / 16f) else h.toFloat()
+        artboardTop = if (portrait) (h - artH) / 2f else 0f
         engine.updateMetrics(
             Metrics(
                 widthPx = w.toFloat(),
-                heightPx = h.toFloat(),
+                heightPx = artH,
                 density = dm.density,
                 userScale = engine.settings.uiScale,
                 insetLeftPx = 0f,
@@ -43,24 +58,31 @@ class SimulatorView(context: Context, attrs: android.util.AttributeSet? = null) 
         )
     }
 
+    private fun toArtboardY(y: Float): Float = y - artboardTop
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        canvas.save()
+        canvas.translate(0f, artboardTop)
         engine.draw(canvas, System.nanoTime() / 1_000_000L)
+        canvas.restore()
         firstFrameDrawn = true
         if (engine.needsFrame()) postInvalidateOnAnimation()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y - artboardTop
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                lastX = event.x; lastY = event.y
-                engine.onDown(event.x, event.y)
+                lastX = x; lastY = y
+                engine.onDown(x, y)
             }
             MotionEvent.ACTION_MOVE -> {
-                engine.onDrag(event.x, event.y, event.x - lastX, event.y - lastY)
-                lastX = event.x; lastY = event.y
+                engine.onDrag(x, y, x - lastX, y - lastY)
+                lastX = x; lastY = y
             }
-            MotionEvent.ACTION_UP -> engine.onUp(event.x, event.y)
+            MotionEvent.ACTION_UP -> engine.onUp(x, y)
             MotionEvent.ACTION_CANCEL -> engine.onCancel()
         }
         postInvalidateOnAnimation()

@@ -99,7 +99,7 @@ class LibraryScene(private val engine: Engine) : Scene {
         ui.scrim(c, 0f, 0f, m.widthPx, m.heightPx, 0x8C000000.toInt(), fromTop = false)
         ui.scrim(c, 0f, 0f, m.widthPx, m.px(420f), 0xCC000000.toInt(), fromTop = true)
 
-        Chrome.topBar(f, 0, listOf("Games", "Media"), onTab = { i ->
+        Chrome.topBar(f, 0, listOf(engine.s("games"), engine.s("media")), onTab = { i ->
             if (i == 1) engine.openMedia()
         }, showClock = engine.settings.showClock)
 
@@ -110,17 +110,17 @@ class LibraryScene(private val engine: Engine) : Scene {
         ui.rect(c, left, y, left + tileS, y + tileS, 0xCC101014.toInt(), m.px(18f))
         Icons.draw(c, Glyph.Library, left + tileS / 2f, y + tileS / 2f, tileS * 0.5f,
             0xFFFFFFFF.toInt(), m.px(2.4f))
-        ui.line(c, "Game Library", left + tileS + m.px(28f), y + tileS * 0.68f, m.textPx(34f),
+        ui.line(c, engine.s("game_library"), left + tileS + m.px(28f), y + tileS * 0.68f, m.textPx(34f),
             0xFFFFFFFF.toInt(), Ui.Weight.Bold)
         engine.hits.add(left, y, left + tileS, y + tileS, 11001) { engine.pop() }
         y += tileS + m.px(40f)
 
         // storage line + sort control
         val count = grid.size
-        ui.line(c, "Console storage · $count", left, y, m.textPx(26f),
+        ui.line(c, "${engine.s("console_storage")} · $count", left, y, m.textPx(26f),
             Ui.a(Tok.TextSecondary, 0.85f), Ui.Weight.Medium)
         // sort chip
-        val sortLabel = "Sort by: ${sort.label}"
+        val sortLabel = "${engine.s("sort_by")}: ${engine.s(sort.key)}"
         val ss = m.textPx(22f)
         val sw = ui.measure(sortLabel, ss, Ui.Weight.Medium)
         val sx = m.safeRight - engine.gutter - sw
@@ -137,15 +137,15 @@ class LibraryScene(private val engine: Engine) : Scene {
         y += m.px(34f)
         var cx = left
         LibraryFilter.entries.forEach { fl ->
-            cx += Cards.chip(f, fl.label, cx, y, filter == fl) {
+            cx += Cards.chip(f, engine.s(fl.key), cx, y, filter == fl) {
                 filter = fl
                 engine.sfx.play(Sfx.Cue.Nav)
                 rebuild()
             } + m.px(12f)
         }
         // search
-        cx = Cards.chip(f, if (query.isBlank()) "Search" else "Search: $query", cx, y,
-            searchOpen && query.isNotBlank()) {
+        cx = Cards.chip(f, if (query.isBlank()) engine.s("search") else "“$query”", cx, y,
+            query.isNotBlank()) {
             engine.showSearch { q ->
                 query = q
                 rebuild()

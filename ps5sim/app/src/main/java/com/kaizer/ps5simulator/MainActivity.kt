@@ -60,6 +60,9 @@ class MainActivity : Activity() {
                 "settings" -> e.openSettings()
                 "trophies" -> e.openTrophies()
                 "media" -> e.openMedia()
+                "gallery" -> e.game(gameId ?: "gtavi")?.let {
+                    e.push(com.kaizer.ps5simulator.ui.hub.GalleryScene(e, it.id), com.kaizer.ps5simulator.core.engine.Sfx.Cue.Select)
+                }
                 "launch" -> e.game(gameId ?: "gtavi")?.let { e.openLaunch(it) }
             }
         }, 400L)

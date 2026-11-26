@@ -47,12 +47,12 @@ class SettingsScene(private val engine: Engine) : Scene {
         ui.withAlpha(a) {
             val left = engine.gutter
             val right = m.safeRight - engine.gutter
-            ui.line(c, "Settings", left, m.px(120f), m.textPx(50f), 0xFFFFFFFF.toInt(),
+            ui.line(c, engine.s("settings"), left, m.px(120f), m.textPx(50f), 0xFFFFFFFF.toInt(),
                 Ui.Weight.Display)
-            ui.line(c, "Changes are saved to this device", left, m.px(156f), m.textPx(21f),
+            ui.line(c, engine.s("settings_sub"), left, m.px(156f), m.textPx(21f),
                 Ui.a(Tok.TextSecondary, 0.7f), Ui.Weight.Regular)
 
-            var y = m.px(210f) - scroll
+            var y = m.px(196f) - scroll
             val rowH = m.px(68f)
 
             fun section(title: String) {
@@ -85,64 +85,76 @@ class SettingsScene(private val engine: Engine) : Scene {
                 y += rowH
             }
 
-            section("CONSOLE")
-            valueRow("Profile name", engine.settings.profileName) {
+            ui.clip(c, 0f, m.px(196f), m.widthPx, m.heightPx - m.px(20f)) {
+
+            section(engine.s("profile").uppercase())
+            valueRow(engine.s("profile_name"), engine.settings.profileName) {
                 engine.showTextInput("Profile name", engine.settings.profileName) { v ->
                     engine.settings.profileName = v
                     engine.toast("Profile name updated")
                 }
             }
-            valueRow("Language", languageLabel()) {
+            valueRow(engine.s("language"), languageLabel()) {
                 cycleLanguage()
             }
-            valueRow("Start tab", if (engine.settings.startTab == 0) "Games" else "Media") {
+            valueRow(engine.s("start_tab"), if (engine.settings.startTab == 0) engine.s("games") else engine.s("media")) {
                 engine.settings.startTab = 1 - engine.settings.startTab
                 engine.sfx.play(Sfx.Cue.Select)
             }
 
             section("INTERFACE")
-            toggleRow("Animations", engine.settings.animations) {
+            toggleRow(engine.s("animations"), engine.settings.animations) {
                 engine.settings.animations = !engine.settings.animations
             }
-            toggleRow("Reduced motion", engine.settings.reducedMotion) {
+            toggleRow(engine.s("reduced_motion"), engine.settings.reducedMotion) {
                 engine.settings.reducedMotion = !engine.settings.reducedMotion
             }
-            toggleRow("Dynamic background", engine.settings.dynamicBackground) {
+            toggleRow(engine.s("dynamic_background"), engine.settings.dynamicBackground) {
                 engine.settings.dynamicBackground = !engine.settings.dynamicBackground
             }
-            toggleRow("Show clock", engine.settings.showClock) {
+            toggleRow(engine.s("show_clock"), engine.settings.showClock) {
                 engine.settings.showClock = !engine.settings.showClock
             }
-            toggleRow("Show hints", engine.settings.showHints) {
+            toggleRow(engine.s("show_hints"), engine.settings.showHints) {
                 engine.settings.showHints = !engine.settings.showHints
             }
-            valueRow("UI scale", "${(engine.settings.uiScale * 100).toInt()}%") {
+            valueRow(engine.s("ui_scale"), "${(engine.settings.uiScale * 100).toInt()}%") {
                 val next = engine.settings.uiScale + 0.05f
                 engine.settings.uiScale = if (next > 1.15f) 0.90f else next
                 engine.applyUiScale()
                 engine.sfx.play(Sfx.Cue.Select)
             }
 
-            section("AUDIO & FEEDBACK")
-            toggleRow("UI sound effects", engine.settings.sfxEnabled) {
+            section("AUDIO")
+            toggleRow(engine.s("sfx"), engine.settings.sfxEnabled) {
                 engine.settings.sfxEnabled = !engine.settings.sfxEnabled
                 if (engine.settings.sfxEnabled) engine.sfx.play(Sfx.Cue.Select)
             }
-            valueRow("Sound volume", "${(engine.settings.sfxVolume * 100).toInt()}%") {
+            valueRow(engine.s("volume"), "${(engine.settings.sfxVolume * 100).toInt()}%") {
                 engine.settings.sfxVolume =
                     if (engine.settings.sfxVolume >= 0.95f) 0.2f else engine.settings.sfxVolume + 0.2f
                 engine.sfx.play(Sfx.Cue.Select)
             }
-            toggleRow("Haptics", engine.settings.haptics) {
+            toggleRow(engine.s("haptics"), engine.settings.haptics) {
                 engine.settings.haptics = !engine.settings.haptics
             }
-            toggleRow("Music", engine.settings.musicEnabled) {
+            toggleRow(engine.s("music"), engine.settings.musicEnabled) {
                 engine.settings.musicEnabled = !engine.settings.musicEnabled
                 engine.sim.musicPlaying = engine.settings.musicEnabled
             }
 
+            // touch adaptation: optional DualSense overlay
+            Cards.row(f, left, right, y, rowH, engine.s("virtual_pad"), null, chevron = false,
+                onTap = { engine.toggleVirtualPad() })
+            val vpw = m.px(64f)
+            val vph = m.px(34f)
+            Cards.toggle(f, right - m.px(4f) - vpw, y + (rowH - vph) / 2f,
+                engine.virtualPadVisible, vpw, vph)
+            Chrome.divider(f, left, right, y + rowH, 0.06f)
+            y += rowH
+
             section("SYSTEM")
-            valueRow("About this app", "Version 2.0.0") {
+            valueRow(engine.s("about"), "Version 2.0.0") {
                 engine.showInfo(
                     "PS5 Interface Simulator",
                     "An interactive, original reconstruction of the PlayStation 5 interface " +
@@ -151,12 +163,13 @@ class SettingsScene(private val engine: Engine) : Scene {
                         "for this project; fonts are Manrope and Figtree (SIL OFL).",
                 )
             }
-            valueRow("Reset preferences", "Restore defaults") {
+            valueRow(engine.s("reset"), engine.s("restore_defaults")) {
                 engine.confirm("Reset preferences", "All simulator settings return to defaults. Your game library stays untouched.", "Reset") {
                     engine.settings.resetAll()
                     engine.applyUiScale()
                     engine.toast("Preferences reset")
                 }
+            }
             }
             y += m.px(40f)
             ui.line(c, "PS5 Interface Simulator · fan project · no affiliation with Sony",

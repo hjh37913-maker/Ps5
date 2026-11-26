@@ -273,6 +273,7 @@ class Engine(private val context: Context) {
             if (cc.visible || cc.isAnimating()) cc.draw(f)
         }
         overlays.draw(f)
+        if (virtualPadVisible) com.kaizer.ps5simulator.ui.components.VirtualPad.draw(f)
         drawTransition(f)
     }
 
@@ -309,11 +310,25 @@ class Engine(private val context: Context) {
         metrics = m
     }
 
+    /** Virtual DualSense overlay (touch adaptation), toggled from Settings/home hint. */
+    var virtualPadVisible: Boolean = false
+        private set
+
+    fun toggleVirtualPad() {
+        virtualPadVisible = !virtualPadVisible
+        toast(if (virtualPadVisible) "${s("virtual_pad")} — on" else "${s("virtual_pad")} — off")
+        invalidationCallback()
+    }
+
     // ------------------------------------------------------------------ convenience
     val gutter: Float get() = metrics.px(Ref.GUTTER_LEFT)
 
     val hour: Int get() = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
     val minute: Int get() = java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE)
+
+    /** Localised UI string for the current in-app language. */
+    fun s(key: String): String = com.kaizer.ps5simulator.core.design.Strings.get(
+        settings.language, key)
 
     fun clockText(): String {
         val h24 = hour

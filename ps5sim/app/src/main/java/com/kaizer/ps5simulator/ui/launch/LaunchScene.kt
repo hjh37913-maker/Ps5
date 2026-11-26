@@ -105,7 +105,7 @@ class LaunchScene(private val engine: Engine, private val gameId: String) : Scen
             ui.rect(c, cx - bw / 2f, by, cx + bw / 2f, by + bh, 0x33FFFFFF.toInt(), bh / 2f)
             val p = if (phase == 0) 0.08f else Ease.soft((t / 2.4f).coerceIn(0f, 1f))
             ui.rect(c, cx - bw / 2f, by, cx - bw / 2f + bw * p, by + bh, 0xFFFFFFFF.toInt(), bh / 2f)
-            ui.line(c, "Loading simulation…", cx, by + m.px(42f), m.textPx(20f),
+            ui.line(c, engine.s("simulation") + "…", cx, by + m.px(42f), m.textPx(20f),
                 Ui.a(Tok.TextSecondary, 0.75f), Ui.Weight.Medium, align = Paint.Align.CENTER)
         }
     }
@@ -121,7 +121,7 @@ class LaunchScene(private val engine: Engine, private val gameId: String) : Scen
         val ph = m.px(300f)
         ui.rect(c, left, top, left + pw, top + ph, 0xCC0B0C10.toInt(), m.px(22f))
         ui.rectOutline(c, left, top, left + pw, top + ph, 0x1FFFFFFF.toInt(), m.px(22f), 1.2f)
-        ui.line(c, "Simulation running", left + m.px(34f), top + m.px(56f), m.textPx(24f),
+        ui.line(c, engine.s("simulation"), left + m.px(34f), top + m.px(56f), m.textPx(24f),
             Ui.a(Tok.TextSecondary, 0.9f), Ui.Weight.Medium)
         ui.lineFit(c, g.title, left + m.px(34f), top + m.px(116f), pw - m.px(68f),
             m.textPx(44f), 0xFFFFFFFF.toInt(), Ui.Weight.Display)
@@ -150,7 +150,7 @@ class LaunchScene(private val engine: Engine, private val gameId: String) : Scen
         val by = top + ph + m.px(28f)
         ui.rect(c, bx, by, bx + bw, by + bh, 0x2EFFFFFF.toInt(), bh / 2f)
         ui.rectOutline(c, bx, by, bx + bw, by + bh, 0x40FFFFFF.toInt(), bh / 2f, 2f)
-        ui.line(c, "Close simulation", bx + bw / 2f, by + bh / 2f + m.textPx(9f),
+        ui.line(c, engine.s("close_simulation"), bx + bw / 2f, by + bh / 2f + m.textPx(9f),
             m.textPx(22f), 0xFFFFFFFF.toInt(), Ui.Weight.Medium, align = Paint.Align.CENTER)
         engine.hits.add(bx, by, bx + bw, by + bh, 12001) {
             if (phase == 2) {

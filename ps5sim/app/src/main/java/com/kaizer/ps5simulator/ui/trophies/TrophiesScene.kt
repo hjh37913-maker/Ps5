@@ -53,7 +53,7 @@ class TrophiesScene(private val engine: Engine) : Scene {
 
         ui.withAlpha(a) {
             val left = engine.gutter
-            ui.line(c, "Trophies", left, m.px(140f), m.textPx(58f), 0xFFFFFFFF.toInt(),
+            ui.line(c, engine.s("trophies"), left, m.px(140f), m.textPx(58f), 0xFFFFFFFF.toInt(),
                 Ui.Weight.Regular)
             // header stats
             val right = m.safeRight - engine.gutter
@@ -64,7 +64,7 @@ class TrophiesScene(private val engine: Engine) : Scene {
             Icons.draw(c, Glyph.Trophy, x, trophyY, m.px(34f), Tok.TrophyGold, m.px(2f))
             ui.line(c, total.toString(), x + m.px(30f), trophyY + m.textPx(14f), m.textPx(44f),
                 0xFFFFFFFF.toInt(), Ui.Weight.Medium)
-            ui.line(c, "Total", x + m.px(30f), trophyY + m.px(42f), m.textPx(17f),
+            ui.line(c, engine.s("total"), x + m.px(30f), trophyY + m.px(42f), m.textPx(17f),
                 Ui.a(Tok.TextSecondary, 0.8f), Ui.Weight.Regular)
             x += m.px(190f)
             val counts = listOf(

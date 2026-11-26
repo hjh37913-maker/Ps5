@@ -53,6 +53,13 @@ class SwitcherStrip(
 
     fun tileCount(): Int = tiles.size
 
+    fun selectedIndex(): Int = selected
+
+    /** Tile kind: 1 = Store, 2 = game, 3 = Game Library. */
+    fun tileKind(index: Int): Int = tiles.getOrNull(index)?.special ?: 0
+
+    fun tileGame(index: Int): Game? = tiles.getOrNull(index)?.game
+
     fun selectedGame(): Game? = tiles.getOrNull(selected)?.game
 
     fun scrollBy(dx: Float) {

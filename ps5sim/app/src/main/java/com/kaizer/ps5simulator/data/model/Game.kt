@@ -39,15 +39,15 @@ data class Game(
     }
 }
 
-enum class LibrarySort(val label: String) {
-    RECENT("Recent"),
-    NAME("Name (A - Z)"),
-    SIZE("Size"),
-    RELEASE("Release year"),
+enum class LibrarySort(val label: String, val key: String) {
+    RECENT("Recent", "recent"),
+    NAME("Name (A - Z)", "name"),
+    SIZE("Size", "size"),
+    RELEASE("Release year", "release"),
 }
 
-enum class LibraryFilter(val label: String) {
-    ALL("All"),
-    INSTALLED("Installed on console"),
-    FAVORITES("Favourites"),
+enum class LibraryFilter(val label: String, val key: String) {
+    ALL("All", "all"),
+    INSTALLED("Installed on console", "installed"),
+    FAVORITES("Favourites", "favourites"),
 }

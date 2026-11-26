@@ -88,6 +88,14 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
 
     private fun selectedGame(): Game? = engine.game(selectedId)
 
+    /** Move the switcher focus by one tile (used by the virtual pad's D-pad). */
+    fun stepSelection(delta: Int) {
+        val n = strip.tileCount()
+        if (n == 0) return
+        strip.select((strip.selectedIndex() + delta + n) % n)
+        onSelectionChanged()
+    }
+
     /** Harness hook: focus a switcher index without simulating a touch. */
     fun selectGameByIndex(index: Int) {
         if (index in 0 until strip.tileCount()) {
@@ -207,7 +215,7 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         // 2 — top bar --------------------------------------------------------------
         // gradient scrim behind the top bar (console art stays visible at the very top)
         ui.scrim(c, 0f, 0f, m.widthPx, m.px(300f), 0x99000000.toInt(), fromTop = true)
-        val titles = listOf("Games", "Media")
+        val titles = listOf(engine.s("games"), engine.s("media"))
         val activeTab = if (tab == Tab.Games) 0 else 1
         val onTab: (Int) -> Unit = { i ->
             val next = if (i == 0) Tab.Games else Tab.Media
@@ -370,7 +378,7 @@ class HomeScene(private val engine: Engine, gameId: String, startTab: Int = 0) :
         val top = mustSeeTop()
         val labelY = top - m.px(20f)
         ui.withAlpha(alpha) {
-            Chrome.sectionLabel(f, "Must see", left, labelY)
+            Chrome.sectionLabel(f, engine.s("must_see"), left, labelY)
             ui.clip(c, left - m.px(10f), top - m.px(8f), m.safeRight, top + cardH + m.px(18f)) {
                 mustSee.forEachIndexed { i, g ->
                     val x = left + i * (cardW + gap) - mustSeeScroll

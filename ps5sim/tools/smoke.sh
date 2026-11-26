@@ -46,6 +46,15 @@ scenario trophies gtavi
 scenario store gtavi
 scenario launch gtavi
 scenario media gtavi
+scenario gallery gtavi
+
+# portrait pass: rotate the device and re-capture the two densest screens
+adb shell settings put system accelerometer_rotation 0
+adb shell settings put system user_rotation 0
+sleep 3
+scenario portrait_home gtavi
+scenario portrait_library gtavi
+adb shell settings put system user_rotation 1
 
 (adb shell dumpsys activity activities | grep -iE 'mResumedActivity' ) > resumed.txt 2>&1
 adb logcat -d -v threadtime > logcat.txt

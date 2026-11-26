@@ -57,8 +57,8 @@ class ControlCenterScene(private val engine: Engine) : Scene {
         Glyph.Mic, Glyph.Controller, Glyph.Headset, Glyph.Power,
     )
     private val glyphLabels = listOf(
-        "Home", "Game Library", "Notifications", "Downloads", "Music", "Sound",
-        "Microphone", "Accessories", "Headset", "Power",
+        "home", "game_library", "notifications", "downloads", "music", "sound",
+        "microphone", "accessories", "headset", "power",
     )
 
     private var activityCards: List<ActivityCard> = emptyList()
@@ -201,7 +201,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
         val arise = (1f - ease) * m.px(40f)
 
         // the focused glyph keeps a label under the dock, as on console
-        val focusedLabel = if (expandedGlyph >= 0) glyphLabels[expandedGlyph] else glyphLabels[0]
+        val focusedLabel = engine.s(glyphLabels[if (expandedGlyph >= 0) expandedGlyph else 0])
 
         ui.withAlpha(ease) {
             // dock backdrop: soft dark plate so the glyphs always read
@@ -279,7 +279,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
         when (i) {
             0 -> { hide(); engine.popToRoot() }
             1 -> { hide(); engine.openLibrary() }
-            9 -> engine.confirm("Turn Off Console", "This is the simulator's power menu. The app will return to the home screen.", "Turn Off") {
+            9 -> engine.confirm(engine.s("turn_off"), "This is the simulator's power menu. The app will return to the home screen.", engine.s("power")) {
                 hide(); engine.popToRoot()
             }
             else -> expandedGlyph = if (expandedGlyph == i) -1 else i
@@ -319,7 +319,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
     private fun soundPanel(f: Frame, px: Float, py: Float, pw: Float, ph: Float) {
         val m = engine.metrics
         val ui = f.ui
-        panelTitle(f, px + m.px(28f), py + m.px(40f), "Sound")
+        panelTitle(f, px + m.px(28f), py + m.px(40f), engine.s("sound"))
         ui.line(f.canvas, "Speaker", px + m.px(28f), py + m.px(76f), m.textPx(19f),
             Ui.a(Tok.TextSecondary, 0.8f), Ui.Weight.Medium)
         Cards.slider(f, px + m.px(28f), py + m.px(92f), pw - m.px(56f), m.px(22f),
@@ -344,7 +344,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
     private fun musicPanel(f: Frame, px: Float, py: Float, pw: Float, ph: Float) {
         val m = engine.metrics
         val ui = f.ui
-        panelTitle(f, px + m.px(28f), py + m.px(40f), "Music")
+        panelTitle(f, px + m.px(28f), py + m.px(40f), engine.s("music"))
         ui.lineFit(f.canvas, engine.sim.nowPlaying, px + m.px(28f), py + m.px(76f),
             pw - m.px(56f), m.textPx(20f), Ui.a(Tok.TextSecondary, 0.85f), Ui.Weight.Medium)
         Cards.slider(f, px + m.px(28f), py + m.px(94f), pw - m.px(56f), m.px(18f),
@@ -374,7 +374,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
     private fun notificationsPanel(f: Frame, px: Float, py: Float, pw: Float, ph: Float) {
         val m = engine.metrics
         val ui = f.ui
-        panelTitle(f, px + m.px(28f), py + m.px(40f), "Notifications")
+        panelTitle(f, px + m.px(28f), py + m.px(40f), engine.s("notifications"))
         val list = Catalog.notifications()
         var y = py + m.px(72f)
         list.take(4).forEach { n ->
@@ -400,7 +400,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
     private fun downloadsPanel(f: Frame, px: Float, py: Float, pw: Float, ph: Float) {
         val m = engine.metrics
         val ui = f.ui
-        panelTitle(f, px + m.px(28f), py + m.px(40f), "Downloads")
+        panelTitle(f, px + m.px(28f), py + m.px(40f), engine.s("downloads"))
         val g = activityGame
         if (g == null) {
             ui.line(f.canvas, "Nothing downloading", px + m.px(28f), py + m.px(90f),
@@ -426,7 +426,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
 
     private fun micPanel(f: Frame, px: Float, py: Float, pw: Float, ph: Float) {
         val m = engine.metrics
-        panelTitle(f, px + m.px(28f), py + m.px(40f), "Microphone")
+        panelTitle(f, px + m.px(28f), py + m.px(40f), engine.s("microphone"))
         Cards.chip(f, if (engine.sim.microphoneMuted) "Muted" else "Open", px + m.px(28f),
             py + m.px(64f), engine.sim.microphoneMuted) {
             engine.sim.microphoneMuted = !engine.sim.microphoneMuted
@@ -439,7 +439,7 @@ class ControlCenterScene(private val engine: Engine) : Scene {
     private fun accessoriesPanel(f: Frame, px: Float, py: Float, pw: Float, ph: Float, index: Int) {
         val m = engine.metrics
         val ui = f.ui
-        panelTitle(f, px + m.px(28f), py + m.px(40f), if (index == 7) "Accessories" else "Headset")
+        panelTitle(f, px + m.px(28f), py + m.px(40f), engine.s(if (index == 7) "accessories" else "headset"))
         ui.line(f.canvas, "DualSense wireless controller", px + m.px(28f), py + m.px(80f),
             m.textPx(20f), 0xFFFFFFFF.toInt(), Ui.Weight.Medium)
         ui.circle(f.canvas, px + m.px(34f), py + m.px(112f), m.px(5f), Tok.OnlineGreen)
@@ -454,12 +454,12 @@ class ControlCenterScene(private val engine: Engine) : Scene {
 
     private fun genericPanel(f: Frame, px: Float, py: Float, pw: Float, ph: Float, index: Int) {
         val m = engine.metrics
-        panelTitle(f, px + m.px(28f), py + m.px(40f), glyphLabels[index])
+        panelTitle(f, px + m.px(28f), py + m.px(40f), engine.s(glyphLabels[index]))
         Cards.chip(f, "On", px + m.px(28f), py + m.px(70f), true) {
-            engine.toast("${glyphLabels[index]}: on (simulator)")
+            engine.toast("${engine.s(glyphLabels[index])}: ${engine.s("on")} (simulator)")
         }
         Cards.chip(f, "Off", px + m.px(140f), py + m.px(70f), false) {
-            engine.toast("${glyphLabels[index]}: off (simulator)")
+            engine.toast("${engine.s(glyphLabels[index])}: ${engine.s("off")} (simulator)")
         }
     }
 

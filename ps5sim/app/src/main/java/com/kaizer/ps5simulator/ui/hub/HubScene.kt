@@ -77,7 +77,7 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
         ui.withAlpha(a) {
             // logo lockup
             val left = engine.gutter
-            val logoH = m.px(210f)
+            val logoH = m.px(158f)
             val logoW = m.px(Ref.HUB_LOGO_MAX_W)
             val ly = m.px(Ref.HUB_LOGO_Y) - logoH / 2f
             val hero = Art.get(g.heroArt, 640, 360)
@@ -99,7 +99,7 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
                 Ui.a(Tok.TextPrimary, 0.9f), Ui.Weight.Medium)
 
             // Play pill
-            val btnY = metaY + m.px(26f)
+            val btnY = metaY + m.px(20f)
             val bw = m.px(Ref.HUB_PLAY_W)
             val bh = m.px(Ref.HUB_PLAY_H)
             ui.rect(c, left, btnY, left + bw, btnY + bh, 0xF2FFFFFF.toInt(), bh / 2f)
@@ -110,7 +110,7 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
             val gx = left + bw / 2f - groupW / 2f
             val cy = btnY + bh / 2f
             Icons.draw(c, Glyph.Play, gx + tri, cy, tri * 2.2f, 0xFF0B0B10.toInt(), 0f)
-            ui.line(c, "Play", gx + tri * 2.2f + lblSize * 0.5f, cy + lblSize * 0.36f, lblSize,
+            ui.line(c, engine.s("play"), gx + tri * 2.2f + lblSize * 0.5f, cy + lblSize * 0.36f, lblSize,
                 0xFF0B0B10.toInt(), Ui.Weight.Bold)
             Chrome.focusRing(f, left, btnY, left + bw, btnY + bh, bh / 2f)
             engine.hits.add(left, btnY, left + bw, btnY + bh, 10001) { launch(g) }
@@ -118,6 +118,23 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
             // secondary actions row (installed state, favourite, art notice)
             val secY = btnY + bh + m.px(20f)
             drawSecondaryActions(f, g, left, secY)
+        }
+
+        // gallery affordance (screenshots + video), top-right of the artwork
+        ui.withAlpha(Ease.soft(a)) {
+            val chipW = m.px(232f)
+            val chipH = m.px(52f)
+            val cx = m.safeRight - engine.gutter - chipW
+            val cy = m.px(26f)
+            ui.rect(c, cx, cy, cx + chipW, cy + chipH, 0x66000000, chipH / 2f)
+            ui.rectOutline(c, cx, cy, cx + chipW, cy + chipH, 0x33FFFFFF, chipH / 2f, 1.2f)
+            Icons.draw(c, Glyph.Camera, cx + m.px(26f), cy + chipH / 2f, m.px(20f),
+                0xE6FFFFFF.toInt(), m.px(1.6f))
+            ui.line(c, "Screenshots & media", cx + m.px(46f), cy + chipH / 2f + m.textPx(8f),
+                m.textPx(19f), 0xE6FFFFFF.toInt(), Ui.Weight.Medium)
+            engine.hits.add(cx, cy, cx + chipW, cy + chipH, 10020) {
+                engine.push(GalleryScene(engine, g.id), Sfx.Cue.Select)
+            }
         }
 
         // info cards
@@ -187,7 +204,7 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
         }
         x += m.px(64f) + ui.measure("Favourite", s, Ui.Weight.Medium)
         // art notice
-        ui.line(c, "ORIGINAL CONCEPT ART · SIMULATOR", x, y + h / 2f + m.textPx(8f),
+        ui.line(c, engine.s("art_notice"), x, y + h / 2f + m.textPx(8f),
             m.textPx(16f), Ui.a(Tok.TextTertiary, 0.5f), Ui.Weight.Medium)
     }
 
@@ -197,7 +214,7 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
         val c = f.canvas
         val left = engine.gutter
         val cw = m.px(Ref.HUB_INFO_CARD_W) * 0.92f
-        val ch = m.px(Ref.HUB_INFO_CARD_H) * 0.92f
+        val ch = m.px(Ref.HUB_INFO_CARD_H) * 1.34f
         val gap = m.px(Ref.HUB_INFO_GAP)
         val y = m.heightPx - m.px(Ref.HUB_INFO_BOTTOM) - ch
         val stats = listOf(
@@ -212,17 +229,17 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
                 if (x + cw > m.safeRight) return@forEachIndexed
                 ui.rect(c, x, y, x + cw, y + ch, 0x8C0E1014.toInt(), m.px(16f))
                 ui.rectOutline(c, x, y, x + cw, y + ch, 0x1AFFFFFF.toInt(), m.px(16f), 1.2f)
-                Icons.draw(c, glyph, x + m.px(24f), y + m.px(26f), m.px(20f),
-                    Ui.a(Tok.TextSecondary, 0.9f), m.px(1.6f))
-                ui.line(c, title, x + m.px(43f), y + m.px(33f), m.textPx(20f),
+                Icons.draw(c, glyph, x + m.px(18f), y + m.px(19f), m.px(15f),
+                    Ui.a(Tok.TextSecondary, 0.9f), m.px(1.4f))
+                ui.line(c, title, x + m.px(34f), y + m.px(24f), m.textPx(15f),
                     Ui.a(Tok.TextSecondary, 0.9f), Ui.Weight.Medium)
-                var vx = x + m.px(22f)
+                var vx = x + m.px(18f)
                 lines.forEach { (v, lbl) ->
-                    val vs = m.textPx(33f)
-                    val vw = ui.line(c, v, vx, y + m.px(82f), vs, 0xFFFFFFFF.toInt(), Ui.Weight.Display)
-                    ui.line(c, lbl, vx, y + m.px(105f), m.textPx(17f),
+                    val vs = m.textPx(24f)
+                    val vw = ui.line(c, v, vx, y + m.px(58f), vs, 0xFFFFFFFF.toInt(), Ui.Weight.Display)
+                    ui.line(c, lbl, vx, y + m.px(74f), m.textPx(13f),
                         Ui.a(Tok.TextSecondary, 0.65f), Ui.Weight.Regular)
-                    vx += vw + m.px(24f)
+                    vx += vw + m.px(18f)
                 }
                 ui.rect(c, x + m.px(22f), y + ch - m.px(30f), x + cw - m.px(22f),
                     y + ch - m.px(27f), 0x22FFFFFF.toInt(), 1.5f)
@@ -240,13 +257,13 @@ class HubScene(private val engine: Engine, private val gameId: String) : Scene {
         val m = engine.metrics
         val ui = f.ui
         val c = f.canvas
-        val cardW = m.px(300f)
-        val cardH = m.px(430f)
-        val gap = m.px(16f)
+        val cardW = m.px(258f)
+        val cardH = m.px(378f)
+        val gap = m.px(14f)
         val right = m.safeRight - engine.gutter
         val left = right - cardW * 2.6f
-        val y = m.heightPx - m.px(Ref.HUB_INFO_BOTTOM) - m.px(Ref.HUB_INFO_CARD_H) * 0.92f
-            - m.px(40f) - cardH
+        val y = m.heightPx - m.px(Ref.HUB_INFO_BOTTOM) - m.px(Ref.HUB_INFO_CARD_H) * 1.34f
+            - m.px(26f) - cardH
         if (y < m.px(300f)) return
         ui.withAlpha(Ease.soft(a) * 0.98f) {
             ui.clip(c, left - m.px(10f), y - m.px(10f), right + m.px(10f), y + cardH + m.px(10f)) {

@@ -45,7 +45,7 @@ class StoreScene(private val engine: Engine) : Scene {
 
         ui.withAlpha(a) {
             val left = engine.gutter
-            ui.line(c, "Featured", left, m.px(150f), m.textPx(44f), 0xFFFFFFFF.toInt(),
+            ui.line(c, engine.s("featured"), left, m.px(150f), m.textPx(44f), 0xFFFFFFFF.toInt(),
                 Ui.Weight.Display)
             hero?.let { g ->
                 ui.lineFit(c, g.title, left, m.px(210f), m.widthPx * 0.5f, m.textPx(30f),
@@ -57,7 +57,7 @@ class StoreScene(private val engine: Engine) : Scene {
                 val bh = m.px(78f)
                 val by = m.px(290f)
                 ui.rect(c, left, by, left + bw, by + bh, 0xE6FFFFFF.toInt(), bh / 2f)
-                ui.line(c, "Add to Library", left + m.px(30f), by + bh / 2f + m.textPx(9f),
+                ui.line(c, engine.s("add_library"), left + m.px(30f), by + bh / 2f + m.textPx(9f),
                     m.textPx(23f), 0xFF0B0B10.toInt(), Ui.Weight.Bold)
                 ui.line(c, price, left + bw - m.px(30f), by + bh / 2f + m.textPx(9f),
                     m.textPx(23f), 0xFF0B0B10.toInt(), Ui.Weight.Bold, align = Paint.Align.RIGHT)
@@ -69,7 +69,7 @@ class StoreScene(private val engine: Engine) : Scene {
             }
             // deals row
             val rowY = m.heightPx - m.px(300f)
-            ui.line(c, "Deals for you", left, rowY - m.px(20f), m.textPx(24f),
+            ui.line(c, engine.s("deals"), left, rowY - m.px(20f), m.textPx(24f),
                 Ui.a(Tok.TextPrimary, 0.9f), Ui.Weight.Medium)
             val tw = m.px(180f)
             val gap = m.px(18f)
@@ -94,7 +94,7 @@ class StoreScene(private val engine: Engine) : Scene {
                 engine.hits.add(x, rowY, x + tw, rowY + tw, 19100 + i) { engine.openHub(g.id) }
             }
         }
-        ui.line(c, "Store is a visual demo — no purchases", m.widthPx / 2f,
+        ui.line(c, engine.s("store_demo"), m.widthPx / 2f,
             m.heightPx - m.px(18f), m.textPx(16f), Ui.a(Tok.TextTertiary, 0.5f),
             Ui.Weight.Regular, align = Paint.Align.CENTER)
     }
